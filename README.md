@@ -1,5 +1,5 @@
 # decaf
-![Image of SS](https://github.com/cflores713/decaf/blob/master/ScreenshotExample.png)
+![Image of SS](https://github.com/cflores713/decaf/blob/master/newSS.png)
 
 A collaborative project to create a small code editor for the Java programming language; hence the name *decaf*.
 
