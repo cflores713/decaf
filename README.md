@@ -7,6 +7,6 @@ Team Member | GitHub Link
 ------------ | -------------
 :octocat: Carlos Flores | https://github.com/cflores713
 :squirrel: Shaun Byrnes |
-:cat: Caitie Hall | 
+:cat: Caitie Hall | https://github.com/chall18
 :wolf: Katherine Kin | https://github.com/katherinekin
-:bowtie: Christopher Moran | 
+:bowtie: Christopher Moran | https://github.com/chrismoran95
