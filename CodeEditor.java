@@ -7,6 +7,9 @@ import javax.swing.text.*;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+
+
+\\this is a test to merge branches
 class CodeEditor extends JFrame implements ActionListener { 
     //Creates a text box object
     JTextArea text; 
