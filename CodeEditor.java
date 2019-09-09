@@ -15,7 +15,10 @@ class CodeEditor extends JFrame implements ActionListener {
     JTextArea text; 
   
     //creates the frame gui object
-    JFrame title; 
+    JFrame title;
+
+    String textUponOpen, textBeforeExit;
+
   
    
     CodeEditor() 
@@ -115,12 +118,15 @@ class CodeEditor extends JFrame implements ActionListener {
         } 
         else if (in.equals("Exit")) 
         {
-            //ToDo: Finish creating check for if current doc has been modified since being opened.
-            FileWatcher f = new FileWatcher();
-            if(f.testEditingDetection()){//determine if change was made to the file
+            textBeforeExit = text.getText();
+            if(textUponOpen.equals(textBeforeExit)){//no changes have been made, don't need to prompt extra save
+                title.setVisible(false); //exit the text
+            }
+            else{
+                //Changes have been made, prompt user to save
                 //ToDo: Add a pop up here to confirm user wants to save and/or exit
             }
-            title.setVisible(false); //exit the text
+
         } 
         else if (in.equals("Open")) 
         { 
@@ -152,12 +158,13 @@ class CodeEditor extends JFrame implements ActionListener {
     			 catch(Exception evt)
     			 {
     				 JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-    			 		}
     			 }
+    		}
     			 else
     			 {
     				 JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling 
     			 }
+    		textUponOpen = text.getText();
     	
     		
         }
