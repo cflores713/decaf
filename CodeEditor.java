@@ -1,4 +1,4 @@
-import java.awt.*; 
+import java.awt.*;
 import javax.swing.*; 
 import java.io.*; 
 import java.awt.event.*; 
@@ -14,7 +14,10 @@ class CodeEditor extends JFrame implements ActionListener {
     JTextArea text; 
   
     //creates the frame gui object
-    JFrame title; 
+    JFrame title;
+
+    String textUponOpen, textBeforeExit;
+
   
    
     CodeEditor() 
@@ -46,10 +49,10 @@ class CodeEditor extends JFrame implements ActionListener {
         open.addActionListener(this); 
         save.addActionListener(this); 
         exit.addActionListener(this);//command to exit 
-        file.add(newB);//adds small compenents to the menu bar 
+        file.add(newB);//adds small components to the menu bar
         file.add(open); //adds 2nd menu bar to file when clicking to find open
         file.add(save); 
-        file.add(exit);//adds small compenent exit under file
+        file.add(exit);//adds small component exit under file
         //------------------------------2nd menu bar compile//-----------------------------------------//
         JMenu Compile = new JMenu("Compile");
         JMenuItem Build = new JMenuItem("Build");//Menu items adds tab under main Menu when clicking compile
@@ -94,7 +97,56 @@ class CodeEditor extends JFrame implements ActionListener {
         title.setSize(800, 800); //sets the gui frame size
         title.show(); //gui frame will appear
     } 
-  
+
+    void saveFile(){
+        //ToDo: Implement save so you can save changes to the same file repeatedly
+        //Save currently only works as a "Save as"
+        //If you type into a file and save it, then exit and come back, it definitely saves
+        //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
+
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
+        jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
+        jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)","java");//accept only .txt files
+        jfc.addChoosableFileFilter(filter);
+        int returnValue = jfc.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION)
+        {//input here a file read so that it can open and read the file
+            File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
+            try//checks if the file is able to open and not invalid
+            {
+
+
+                File file = jfc.getSelectedFile();//gets the file name
+                String filePath = file.getPath();//gets the path of the file
+                if(!filePath.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
+                {
+                    file = new File(filePath + ".java");
+                    BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
+
+
+                    writeb.write(text.getText()); //gets the text that is inputed
+
+                    writeb.flush();
+                    writeb.close(); //closes the file
+                }
+
+
+
+            }
+            catch(Exception evt)
+            {
+                JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
+        }
+    }
+
+
+
     // If a button is pressed 
     public void actionPerformed(ActionEvent e) 
     { 
@@ -113,95 +165,64 @@ class CodeEditor extends JFrame implements ActionListener {
             text.paste(); //paste the text
         } 
         else if (in.equals("Exit")) 
-        { 
-            title.setVisible(false); //exit the text
-        } 
-        else if (in.equals("Open")) 
-        { 
-        	JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
-    		jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
-    		jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file 
-    		FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)","java");//accept only .txt files
-    		jfc.addChoosableFileFilter(filter);
-    		int returnValue = jfc.showOpenDialog(null);
-    		if (returnValue == JFileChooser.APPROVE_OPTION) 
-    		{//input here a file read so that it can open and read the file
-    			 File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
-    			 try//checks if the file is able to open and not invalid
-    			 {
-    				 String Line = "";
-    				 FileReader read = new FileReader(select);//reads the file that is being open
-    				 BufferedReader input = new BufferedReader(read);//shows the input of what the user used
-    				 while ((Line = input.readLine()) != null) //reads the line
-    				 {
-    					 
-    					
-    					 text.append(Line);//appends the text
-                         text.append("\n");//creates a new line
-                    
-    				 }
-    				
-    				 
-    			 }
-    			 catch(Exception evt)
-    			 {
-    				 JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-    			 		}
-    			 }
-    			 else
-    			 {
-    				 JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling 
-    			 }
-    	
-    		
+        {
+            textBeforeExit = text.getText();
+            if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
+                title.setVisible(false); //exit the text
+            }
+            else{
+                //Changes have been made, prompt user to save
+                int optionChosen = JOptionPane.showConfirmDialog(title, "You've changed your document. Would you like to save before exiting?");
+                if (optionChosen == JOptionPane.YES_OPTION) {
+                    //reroute to save
+                    saveFile();
+
+                } else if (optionChosen == JOptionPane.NO_OPTION) {
+                    title.setVisible(false);//Just exit the page. User doesn't want to save.
+                }
+                //An else if for Cancel isn't necessary. Hitting cancel already just removes the popup and returns you to your current window.
+            }
+
+        } else if (in.equals("Open")) {
+            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
+            jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
+            jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)", "java");//accept only .txt files
+            jfc.addChoosableFileFilter(filter);
+            int returnValue = jfc.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {//input here a file read so that it can open and read the file
+                File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
+                try//checks if the file is able to open and not invalid
+                {
+                    String Line = "";
+                    FileReader read = new FileReader(select);//reads the file that is being open
+                    BufferedReader input = new BufferedReader(read);//shows the input of what the user used
+                    while ((Line = input.readLine()) != null) //reads the line
+                    {
+
+
+                        text.append(Line);//appends the text
+                        text.append("\n");//creates a new line
+
+                    }
+
+
+                } catch (Exception evt) {
+                    JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
+                }
+            } else {
+                JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling
+            }
+            textUponOpen = text.getText();
+
+
+        } else if (in.equals("Save"))//saves only java files
+        {
+            saveFile();
         }
-    else if (in.equals("Save"))//saves only java files 
-    { 
-    	JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
-		jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
-		jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file 
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)","java");//accept only .txt files
-		jfc.addChoosableFileFilter(filter);
-		int returnValue = jfc.showSaveDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) 
-		{//input here a file read so that it can open and read the file
-			 File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
-			 try//checks if the file is able to open and not invalid
-			 {
-				 
-				  
-				 File file = jfc.getSelectedFile();//gets the file name
-				 String filePath = file.getPath();//gets the path of the file
-				 if(!filePath.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
-				 {
-				     file = new File(filePath + ".java");
-				     BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
-
-		               
-	                 writeb.write(text.getText()); //gets the text that is inputed
-
-	                 writeb.flush(); 
-	                 writeb.close(); //closes the file
-				 }
-                
-				
-				 
-			 }
-			 catch(Exception evt)
-			 {
-				 JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-			 	 }
-			 }
-			 else
-			 {
-				 JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling 
-			 }
-	
-		}
-    }
+}
     // Main class 
-    public static void main(String args[]) 
-    { 
+    public static void main(String [] args){
         CodeEditor e = new CodeEditor(); 
     } 
 } 
