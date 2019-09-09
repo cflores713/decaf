@@ -116,37 +116,10 @@ class CodeEditor extends JFrame implements ActionListener {
         else if (in.equals("Exit")) 
         {
             //ToDo: Finish creating check for if current doc has been modified since being opened.
-                //If so, when Exit btn clicked, we need a pop up to appear asking if user wants to save before exiting
-
-            //Testing use of the WatchService API to track changes. Work in Progress - Caitie
-//            try{
-//                WatchService watcher = FileSystems.getDefault().newWatchService();//create WatchService instance
-//                Path myPath = Paths.get(System.getProperty("user.home/newTest.java"));//Need something to grab the path of current file
-//                myPath.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
-//                        StandardWatchEventKinds.ENTRY_DELETE,
-//                        StandardWatchEventKinds.ENTRY_MODIFY);//register path w/ WatchService
-//
-//                try{
-//                    WatchKey myKey;
-//                    while((myKey = watcher.take()) != null){
-//                        for(WatchEvent<?> event: myKey.pollEvents()){
-//                            System.out.println("Event kind: " + event.kind() + ". File affected: " + event.context() + ".");
-//                        }
-//                        myKey.reset();
-//                    }
-//                }
-//                catch(Exception i){
-//                    //watcher.take needed exception handling
-//                    i.printStackTrace();
-//                }
-//
-//            }
-//            catch(Exception ioe){
-//                //WatchService and WatchKey require exception handling
-//                ioe.printStackTrace();
-//            }
-
-
+            FileWatcher f = new FileWatcher();
+            if(f.testEditingDetection()){//determine if change was made to the file
+                //ToDo: Add a pop up here to confirm user wants to save and/or exit
+            }
             title.setVisible(false); //exit the text
         } 
         else if (in.equals("Open")) 
