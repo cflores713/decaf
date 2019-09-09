@@ -1,4 +1,4 @@
-import java.awt.*; 
+import java.awt.*;
 import javax.swing.*; 
 import java.io.*; 
 import java.awt.event.*; 
@@ -7,6 +7,7 @@ import javax.swing.text.*;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import java.nio.file.*;
 
 
 class CodeEditor extends JFrame implements ActionListener { 
@@ -46,10 +47,10 @@ class CodeEditor extends JFrame implements ActionListener {
         open.addActionListener(this); 
         save.addActionListener(this); 
         exit.addActionListener(this);//command to exit 
-        file.add(newB);//adds small compenents to the menu bar 
+        file.add(newB);//adds small components to the menu bar
         file.add(open); //adds 2nd menu bar to file when clicking to find open
         file.add(save); 
-        file.add(exit);//adds small compenent exit under file
+        file.add(exit);//adds small component exit under file
         //------------------------------2nd menu bar compile//-----------------------------------------//
         JMenu Compile = new JMenu("Compile");
         JMenuItem Build = new JMenuItem("Build");//Menu items adds tab under main Menu when clicking compile
@@ -113,7 +114,39 @@ class CodeEditor extends JFrame implements ActionListener {
             text.paste(); //paste the text
         } 
         else if (in.equals("Exit")) 
-        { 
+        {
+            //ToDo: Finish creating check for if current doc has been modified since being opened.
+                //If so, when Exit btn clicked, we need a pop up to appear asking if user wants to save before exiting
+
+            //Testing use of the WatchService API to track changes. Work in Progress - Caitie
+//            try{
+//                WatchService watcher = FileSystems.getDefault().newWatchService();//create WatchService instance
+//                Path myPath = Paths.get(System.getProperty("user.home/newTest.java"));//Need something to grab the path of current file
+//                myPath.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
+//                        StandardWatchEventKinds.ENTRY_DELETE,
+//                        StandardWatchEventKinds.ENTRY_MODIFY);//register path w/ WatchService
+//
+//                try{
+//                    WatchKey myKey;
+//                    while((myKey = watcher.take()) != null){
+//                        for(WatchEvent<?> event: myKey.pollEvents()){
+//                            System.out.println("Event kind: " + event.kind() + ". File affected: " + event.context() + ".");
+//                        }
+//                        myKey.reset();
+//                    }
+//                }
+//                catch(Exception i){
+//                    //watcher.take needed exception handling
+//                    i.printStackTrace();
+//                }
+//
+//            }
+//            catch(Exception ioe){
+//                //WatchService and WatchKey require exception handling
+//                ioe.printStackTrace();
+//            }
+
+
             title.setVisible(false); //exit the text
         } 
         else if (in.equals("Open")) 
@@ -156,7 +189,12 @@ class CodeEditor extends JFrame implements ActionListener {
     		
         }
     else if (in.equals("Save"))//saves only java files 
-    { 
+    {
+        //ToDo: Implement save so you can save changes to the same file repeatedly
+        //Save currently only works as a "Save as"
+        //If you type into a file and save it, then exit and come back, it definitely saves
+            //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
+
     	JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
 		jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
 		jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file 
