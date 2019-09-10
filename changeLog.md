@@ -12,3 +12,5 @@ Task 2 :large_orange_diamond: In-Progress
 Open, Create, Close, & Save a project.
 Team Meeting in PGH 9/05/19 on commiting edits to the master branch.
 Implementation by Chris
+
+Save function bug fixed by Caitie
