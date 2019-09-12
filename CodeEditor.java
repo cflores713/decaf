@@ -17,6 +17,7 @@ class CodeEditor extends JFrame implements ActionListener {
     JFrame title;
 
     String textUponOpen, textBeforeExit;
+    String path;
 
   
    
@@ -27,7 +28,7 @@ class CodeEditor extends JFrame implements ActionListener {
   
        
   
-        
+        path = "";
         text = new JTextArea(); //adds huge text area when gui opens
   
         // Creates the top frame
@@ -40,6 +41,7 @@ class CodeEditor extends JFrame implements ActionListener {
         JMenuItem newB = new JMenuItem("New"); 
         JMenuItem open = new JMenuItem("Open"); 
         JMenuItem save = new JMenuItem("Save");
+        JMenuItem saveAs = new JMenuItem("Save As");
         JMenuItem exit = new JMenuItem("Exit");
        
       
@@ -47,11 +49,13 @@ class CodeEditor extends JFrame implements ActionListener {
         // Commands once a person clicks the menu item
         newB.addActionListener(this); 
         open.addActionListener(this); 
-        save.addActionListener(this); 
+        save.addActionListener(this);
+        saveAs.addActionListener(this);
         exit.addActionListener(this);//command to exit 
         file.add(newB);//adds small components to the menu bar
         file.add(open); //adds 2nd menu bar to file when clicking to find open
-        file.add(save); 
+        file.add(save);
+        file.add(saveAs);
         file.add(exit);//adds small component exit under file
         //------------------------------2nd menu bar compile//-----------------------------------------//
         JMenu Compile = new JMenu("Compile");
@@ -96,9 +100,38 @@ class CodeEditor extends JFrame implements ActionListener {
         title.add(scroll);//adds the scroll bar to the main gui frame
         title.setSize(800, 800); //sets the gui frame size
         title.show(); //gui frame will appear
-    } 
+    }
 
     void saveFile(){
+        if (!path.equals(""))
+        {
+            try//checks if the file is able to open and not invalid
+            {
+                File file = new File(path);
+
+                BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
+
+                writeb.write(text.getText()); //gets the text that is inputed
+
+                writeb.flush();
+                writeb.close(); //closes the file
+
+
+            }
+            catch(Exception evt)
+            {
+                JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
+            }
+        }
+
+        else
+        {
+            saveAsFile();
+        }
+
+    }
+
+    void saveAsFile(){
         //ToDo: Implement save so you can save changes to the same file repeatedly
         //Save currently only works as a "Save as"
         //If you type into a file and save it, then exit and come back, it definitely saves
@@ -118,10 +151,10 @@ class CodeEditor extends JFrame implements ActionListener {
 
 
                 File file = jfc.getSelectedFile();//gets the file name
-                String filePath = file.getPath();//gets the path of the file
-                if(!filePath.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
+                path = file.getPath();//gets the path of the file
+                if(!path.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
                 {
-                    file = new File(filePath + ".java");
+                    file = new File(path + ".java");
                     BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
 
 
@@ -139,10 +172,9 @@ class CodeEditor extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
             }
         }
-        else
-        {
-            JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
-        }
+        //else {
+        //    JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
+        //}
     }
 
 
@@ -175,7 +207,7 @@ class CodeEditor extends JFrame implements ActionListener {
                 int optionChosen = JOptionPane.showConfirmDialog(title, "You've changed your document. Would you like to save before exiting?");
                 if (optionChosen == JOptionPane.YES_OPTION) {
                     //reroute to save
-                    saveFile();
+                    saveAsFile();
 
                 } else if (optionChosen == JOptionPane.NO_OPTION) {
                     title.setVisible(false);//Just exit the page. User doesn't want to save.
@@ -187,13 +219,15 @@ class CodeEditor extends JFrame implements ActionListener {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
             jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
             jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)", "java");//accept only .txt files
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Java (.java)", "java");//accept only .txt files
             jfc.addChoosableFileFilter(filter);
             int returnValue = jfc.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {//input here a file read so that it can open and read the file
                 File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
                 try//checks if the file is able to open and not invalid
                 {
+                    File file = jfc.getSelectedFile();//gets the file name
+                    path = file.getPath();//gets the path of the file
                     String Line = "";
                     FileReader read = new FileReader(select);//reads the file that is being open
                     BufferedReader input = new BufferedReader(read);//shows the input of what the user used
@@ -210,14 +244,17 @@ class CodeEditor extends JFrame implements ActionListener {
                 } catch (Exception evt) {
                     JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
                 }
-            } else {
-                JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling
-            }
+            } //else {
+            //    JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling
+            //}
             textUponOpen = text.getText();
 
 
-        } else if (in.equals("Save"))//saves only java files
+        } else if (in.equals("Save As"))//saves only java files
         {
+            saveAsFile();
+        }
+        else if (in.equals("Save")){
             saveFile();
         }
 }
@@ -226,3 +263,14 @@ class CodeEditor extends JFrame implements ActionListener {
         CodeEditor e = new CodeEditor(); 
     } 
 } 
+
+/*TODO:
+   - Click x or exit doesn't pull save
+   - Click x or exit doesn't unload/end program
+   - Don't pull edit option when double clicking when in file explorer
+   - Remove message after clicking cancel button when saving - Done
+   - Open file just adds to editor, should replace or create new window
+   - change save to save as - Done
+   - create save - Done
+
+ */
