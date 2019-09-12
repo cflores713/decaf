@@ -155,7 +155,10 @@ class CodeEditor extends JFrame implements ActionListener {
         if (in.equals("Cut")) 
         { 
             text.cut(); //cuts the text
-        } 
+        }
+        else if (in.equals("New")) {
+            new CodeEditor();
+        }
         else if (in.equals("Copy")) 
         { 
             text.copy(); //copies text
