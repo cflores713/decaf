@@ -16,8 +16,9 @@ class CodeEditor extends JFrame implements ActionListener {
     //creates the frame gui object
     JFrame title;
 
-    String textUponOpen, textBeforeExit;
-    String path;
+    String textUponOpen = "";
+    String textBeforeExit = "";
+    String path = "";
 
   
    
@@ -100,7 +101,32 @@ class CodeEditor extends JFrame implements ActionListener {
         title.add(scroll);//adds the scroll bar to the main gui frame
         title.setSize(800, 800); //sets the gui frame size
         title.show(); //gui frame will appear
-    }
+
+        title.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                // TODO: Modularize, this is the same code as "Exit" option
+                textBeforeExit = text.getText();
+                if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
+                    title.setVisible(false); //exit the text
+                }
+                else{
+                    //Changes have been made, prompt user to save
+                    int optionChosen = JOptionPane.showConfirmDialog(title, "You've changed your document. Would you like to save before exiting?");
+                    if (optionChosen == JOptionPane.YES_OPTION) {
+                        //reroute to save
+                        saveFile();
+
+                    } else if (optionChosen == JOptionPane.NO_OPTION) {
+                        title.setVisible(false);//Just exit the page. User doesn't want to save.
+                    }
+                    //An else if for Cancel isn't necessary. Hitting cancel already just removes the popup and returns you to your current window.
+                }
+                System.exit(0);
+            }
+        });
+    } 
+
 
     void saveFile(){
         if (!path.equals(""))
@@ -187,7 +213,10 @@ class CodeEditor extends JFrame implements ActionListener {
         if (in.equals("Cut")) 
         { 
             text.cut(); //cuts the text
-        } 
+        }
+        else if (in.equals("New")) {
+            new CodeEditor();
+        }
         else if (in.equals("Copy")) 
         { 
             text.copy(); //copies text
@@ -214,6 +243,7 @@ class CodeEditor extends JFrame implements ActionListener {
                 }
                 //An else if for Cancel isn't necessary. Hitting cancel already just removes the popup and returns you to your current window.
             }
+            System.exit(0);
 
         } else if (in.equals("Open")) {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
