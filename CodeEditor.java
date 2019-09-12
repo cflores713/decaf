@@ -238,6 +238,7 @@ class CodeEditor extends JFrame implements ActionListener {
             jfc.addChoosableFileFilter(filter);
             int returnValue = jfc.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {//input here a file read so that it can open and read the file
+
                 File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
                 try//checks if the file is able to open and not invalid
                 {
@@ -246,6 +247,7 @@ class CodeEditor extends JFrame implements ActionListener {
                     String Line = "";
                     FileReader read = new FileReader(select);//reads the file that is being open
                     BufferedReader input = new BufferedReader(read);//shows the input of what the user used
+                    text.setText("");
                     while ((Line = input.readLine()) != null) //reads the line
                     {
 
@@ -255,6 +257,7 @@ class CodeEditor extends JFrame implements ActionListener {
 
                     }
 
+                    input.close(); //closes the file
 
                 } catch (Exception evt) {
                     JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
