@@ -20,15 +20,13 @@ class CodeEditor extends JFrame implements ActionListener {
     String textBeforeExit = "";
     String path = "";
 
-  
-   
+    public static int windowNum = 1;
+
     CodeEditor() 
     { 
         // Create the actual body of the gui
         title = new JFrame("Decaf");//creates the gui frame 
-  
-       
-  
+
         path = "";
         text = new JTextArea(); //adds huge text area when gui opens
   
@@ -190,9 +188,13 @@ class CodeEditor extends JFrame implements ActionListener {
         textBeforeExit = text.getText();
         if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
             title.setVisible(false); //exit the text
-            System.exit(0);
+            //System.exit(0);
+            windowNum--;
+
+            //check if more than one window is open
         }
         else{
+
             //Changes have been made, prompt user to save
             int optionChosen = JOptionPane.showConfirmDialog(title, "You've changed your document. Would you like to save before exiting?");
             if (optionChosen == JOptionPane.YES_OPTION) {
@@ -201,8 +203,12 @@ class CodeEditor extends JFrame implements ActionListener {
 
             } else if (optionChosen == JOptionPane.NO_OPTION) {
                 title.setVisible(false);//Just exit the page. User doesn't want to save.
-                System.exit(0);
+                //System.exit(0);
+                windowNum--;
             }
+        }
+        if(windowNum == 0){
+            System.exit(0);
         }
     }
 
@@ -217,6 +223,7 @@ class CodeEditor extends JFrame implements ActionListener {
         }
         else if (in.equals("New")) {
             new CodeEditor();
+            windowNum++;
         }
         else if (in.equals("Copy")) 
         { 
