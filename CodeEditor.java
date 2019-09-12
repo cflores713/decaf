@@ -124,8 +124,7 @@ class CodeEditor extends JFrame implements ActionListener {
 
                 writeb.flush();
                 writeb.close(); //closes the file
-                textUponOpen = "";
-                textBeforeExit = "";
+                textUponOpen = text.getText();
             }
             catch(Exception evt)
             {
@@ -172,6 +171,7 @@ class CodeEditor extends JFrame implements ActionListener {
                     writeb.flush();
                     writeb.close(); //closes the file
                 }
+                textUponOpen = text.getText();
 
 
 
