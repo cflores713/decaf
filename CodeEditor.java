@@ -188,6 +188,7 @@ class CodeEditor extends JFrame implements ActionListener {
         textBeforeExit = text.getText();
         if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
             title.setVisible(false); //exit the text
+            title.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             //System.exit(0);
             windowNum--;
 
@@ -205,6 +206,10 @@ class CodeEditor extends JFrame implements ActionListener {
                 title.setVisible(false);//Just exit the page. User doesn't want to save.
                 //System.exit(0);
                 windowNum--;
+            }
+            else
+            {
+                title.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             }
         }
         if(windowNum == 0){
