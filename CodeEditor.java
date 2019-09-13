@@ -9,182 +9,175 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 
-class CodeEditor extends JFrame implements ActionListener { 
+class CodeEditor extends JFrame implements ActionListener {
     //Creates a text box object
-    JTextArea text; 
-  
+    JTextArea text;
+
     //creates the frame gui object
     JFrame title;
-
     String textUponOpen = "";
     String textBeforeExit = "";
     String path = "";
-
+    JTabbedPane tabbedPane = new JTabbedPane();
+    JPanel workSpacePane = new JPanel();
+    JScrollPane explorerScrollPane = new JScrollPane();
     public static int windowNum = 1;
 
-    CodeEditor() 
-    { 
+    CodeEditor()
+    {
         // Create the actual body of the gui
-        title = new JFrame("Decaf");//creates the gui frame 
+        this.title = new JFrame("Decaf");//creates the gui frame
 
-        path = "";
-        text = new JTextArea(); //adds huge text area when gui opens
-  
+        this.path = "";
+
         // Creates the top frame
-        JMenuBar maintabs = new JMenuBar(); 
-  //---------------------First menu tab File------------------------------------------//
-        // Create a menu for menu 
-        JMenu file = new JMenu("File"); 
-  
+        JMenuBar maintabs = new JMenuBar();
+    //---------------------Zero menu tab Project------------------------------------------//
+        // TODO: add actionListeners and actions for project menuitems
+        JMenu project = new JMenu("Project");
         //Menu items when clicking file
-        JMenuItem newB = new JMenuItem("New"); 
-        JMenuItem open = new JMenuItem("Open"); 
+        JMenuItem newProj = new JMenuItem("New Project");
+        JMenuItem openProj = new JMenuItem("Open Project");
+        JMenuItem saveProj = new JMenuItem("Save Project");
+        JMenuItem saveProjAs = new JMenuItem("Save Project As");
+        JMenuItem closeProj = new JMenuItem("Close Project");
+        JMenuItem exitProj = new JMenuItem("Exit");
+    //---------------------First menu tab File------------------------------------------//
+        // Create a menu for menu
+        JMenu file = new JMenu("File");
+
+        //Menu items when clicking file
+        JMenuItem newB = new JMenuItem("New");
+        JMenuItem open = new JMenuItem("Open");
         JMenuItem save = new JMenuItem("Save");
         JMenuItem saveAs = new JMenuItem("Save As");
         JMenuItem exit = new JMenuItem("Exit");
-       
-      
-  
+
         // Commands once a person clicks the menu item
-        newB.addActionListener(this); 
-        open.addActionListener(this); 
+        newB.addActionListener(this);
+        open.addActionListener(this);
         save.addActionListener(this);
         saveAs.addActionListener(this);
-        exit.addActionListener(this);//command to exit 
+        exit.addActionListener(this);//command to exit
         file.add(newB);//adds small components to the menu bar
         file.add(open); //adds 2nd menu bar to file when clicking to find open
         file.add(save);
         file.add(saveAs);
         file.add(exit);//adds small component exit under file
-        //------------------------------2nd menu bar compile//-----------------------------------------//
+
+    // ------------------------------2nd menu bar compile//-----------------------------------------//
         JMenu Compile = new JMenu("Compile");
         JMenuItem Build = new JMenuItem("Build");//Menu items adds tab under main Menu when clicking compile
         Compile.addActionListener(this);
         Build.addActionListener(this);
         Compile.add(Build);//adds the tab build under compile when clicking
-        //---------------------------------------------------------------------------------------------//
-        //----------------------------------3rd menu bar Execute---------------------------------------------//
+
+    //----------------------------------3rd menu bar Execute---------------------------------------------//
         JMenu Execute = new JMenu("Execute");//top menu bar for execute
         Execute.addActionListener(this);//command to execute
-        
-        //----------------------------------------Edit tab---------------------------------------------------------------//
-      
+
+    //--------------------------------4th menu bar Edit tab---------------------------------------------------------------//
+
         JMenu Edit = new JMenu("Edit"); //Adds main tab to the top of the frame
         JMenuItem Cut = new JMenuItem("Cut"); //creates the menu tab when clicking edit for cut
         JMenuItem Copy = new JMenuItem("Copy"); //creates the menu tab when clicking edit for cut
         JMenuItem Paste = new JMenuItem("Paste"); //creates the menu tab when clicking edit for cut
-  
-      
-        Cut.addActionListener(this); 
-        Copy.addActionListener(this); 
-        Paste.addActionListener(this); 
-        
+
+        Cut.addActionListener(this);
+        Copy.addActionListener(this);
+        Paste.addActionListener(this);
+
         Edit.add(Cut);//Adds the menu tab after clicking edit for cut
         Edit.add(Copy); //Adds the menu tab after clicking edit for copy
         Edit.add(Paste); //Adds the menu tab after clicking edit for paste
-  //--------------------------------------------------------------------------------------------------------------------------//
-   
-  
-        maintabs.add(file);//adds file tab on top  
+    //--------------------------------------------------------------------------------------------------------------------------//
+        maintabs.add(project); // adds project tab
+        maintabs.add(file);//adds file tab on top
         maintabs.add(Edit); //connects with mi6 paste
         maintabs.add(Compile);//adds the tab compile to the top
         maintabs.add(Execute);//adds execute bar
 
-        
-        title.setJMenuBar(maintabs); //creates the menu tabs on top
-        title.add(text);//adds the text area when opening gui
-        JScrollPane scroll = new JScrollPane (text);//creates a scroll panel object
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);//scroll bar to be vertical
-        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);//scroll bar to be horizontal
-        title.add(scroll);//adds the scroll bar to the main gui frame
-        title.setSize(800, 800); //sets the gui frame size
-        title.show(); //gui frame will appear
+    //--------------------------------------------------------------------------------------------------//
 
-        title.addWindowListener(new java.awt.event.WindowAdapter() {
+        this.title.setJMenuBar(maintabs); //creates the menu tabs on top
+
+    //----------------------Create default new workspace as a tab---------------------------------------//
+        text = new JTextArea();
+        title.add(text);//adds the text area when opening gui
+
+        //this.title.add(scroll);//adds the scroll bar to the main gui frame
+        // NEW
+
+//        JPanel workspace = new Workspace();
+//        JScrollPane scroll = new JScrollPane (workspace);//creates a scroll panel object
+//        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);//scroll bar to be vertical
+//        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);//scroll bar to be horizontal
+//        text = new JTextArea();
+//        JPanel pane = new JPanel();
+//        pane.add(text);
+//        JScrollPane scroll = new JScrollPane (text);//creates a scroll panel object
+//        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);//scroll bar to be vertical
+//        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);//scroll bar to be horizontal
+
+        this.tabbedPane.addTab("new", new Workspace());
+        this.workSpacePane.add(this.tabbedPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, explorerScrollPane, this.workSpacePane);
+        //splitPane.setOneTouchExpandable(true);
+        //splitPane.setDividerLocation(150);
+        this.title.add(splitPane);
+        this.title.setSize(800, 800); //sets the gui frame size
+        this.title.pack();
+        this.title.setVisible(true);
+
+        this.title.show(); //gui frame will appear
+
+        this.title.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 exitOptions();
             }
         });
-    } 
+
+    }
 
 
     void saveFile(){
-        if (!path.equals(""))
+        Workspace currentTab = (Workspace) tabbedPane.getSelectedComponent();
+        try//checks if the file is able to open and not invalid
         {
-            try//checks if the file is able to open and not invalid
-            {
-                File file = new File(path);
-
-                BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
-
-                writeb.write(text.getText()); //gets the text that is inputed
-
-                writeb.flush();
-                writeb.close(); //closes the file
-                textUponOpen = text.getText();
-            }
-            catch(Exception evt)
-            {
-                JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-            }
+            currentTab.saveFile();
         }
-
-        else
+        catch(Exception evt)
         {
-            saveAsFile();
+            JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
         }
-
     }
 
     void saveAsFile(){
-        //ToDo: Implement save so you can save changes to the same file repeatedly
-        //Save currently only works as a "Save as"
-        //If you type into a file and save it, then exit and come back, it definitely saves
-        //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
-
-        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
-        jfc.setDialogTitle("Save as java file");//dialog for selecting file will say choose file
-        jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Java(.java)","java");//accept only .java files
-        jfc.addChoosableFileFilter(filter);
-        int returnValue = jfc.showSaveDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION)
-        {//input here a file read so that it can open and read the file
-            File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
-            try//checks if the file is able to open and not invalid
-            {
-
-
-                File file = jfc.getSelectedFile();//gets the file name
-                path = file.getPath();//gets the path of the file
-                if(!path.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
-                {
-                    file = new File(path + ".java");
-                    BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
-
-
-                    writeb.write(text.getText()); //gets the text that is inputed
-
-                    writeb.flush();
-                    writeb.close(); //closes the file
-                }
-                textUponOpen = text.getText();
-
-
-
-            }
-            catch(Exception evt)
-            {
-                JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-            }
+        Workspace currentTab = (Workspace) tabbedPane.getSelectedComponent();
+        try//checks if the file is able to open and not invalid
+        {
+            currentTab.saveAsFile();
         }
-        //else {
-        //    JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
-        //}
+        catch(Exception evt)
+        {
+            JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
+        }
     }
 
     public void exitOptions() {
+//        Workspace currentTab = (Workspace) tabbedPane.getSelectedComponent();
+//        try//checks if the file is able to open and not invalid
+//        {
+//            currentTab.exitOptions();
+//        }
+//        catch(Exception evt)
+//        {
+//            JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
+//        }
+
+
+
         textBeforeExit = text.getText();
         if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
             title.setVisible(false); //exit the text
@@ -216,82 +209,55 @@ class CodeEditor extends JFrame implements ActionListener {
             System.exit(0);
         }
     }
+    public void addPanel() {
+        JPanel workspace = new Workspace();
+        this.tabbedPane.addTab("new", workspace);
+    }
+    public void open() {
+        Workspace workspace = new Workspace();
+        workspace.open();
+        this.tabbedPane.addTab(workspace.getFileName(), workspace);
+    }
+    // If a button is pressed
+    public void actionPerformed(ActionEvent e)
+    {
+        String in = e.getActionCommand();
 
-    // If a button is pressed 
-    public void actionPerformed(ActionEvent e) 
-    { 
-        String in = e.getActionCommand(); 
-  
-        if (in.equals("Cut")) 
-        { 
+        if (in.equals("Cut"))
+        {
             text.cut(); //cuts the text
         }
-        else if (in.equals("New")) {
-            new CodeEditor();
-            windowNum++;
-        }
-        else if (in.equals("Copy")) 
-        { 
+        else if (in.equals("Copy"))
+        {
             text.copy(); //copies text
-        } 
-        else if (in.equals("Paste")) 
-        { 
+        }
+        else if (in.equals("Paste"))
+        {
             text.paste(); //paste the text
-        } 
-        else if (in.equals("Exit")) 
+        }
+        else if (in.equals("Exit"))
         {
             exitOptions();
         }
+        else if (in.equals("New")) {
+            this.addPanel();
+            windowNum++;
+        }
         else if (in.equals("Open")) {
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
-            jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
-            jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Java (.java)", "java");//accept only .txt files
-            jfc.addChoosableFileFilter(filter);
-            int returnValue = jfc.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {//input here a file read so that it can open and read the file
-
-                File select = new File(jfc.getSelectedFile().getAbsolutePath()); //finds selected file so that it be open
-                try//checks if the file is able to open and not invalid
-                {
-                    File file = jfc.getSelectedFile();//gets the file name
-                    path = file.getPath();//gets the path of the file
-                    String Line = "";
-                    FileReader read = new FileReader(select);//reads the file that is being open
-                    BufferedReader input = new BufferedReader(read);//shows the input of what the user used
-                    text.setText("");
-                    while ((Line = input.readLine()) != null) //reads the line
-                    {
-
-
-                        text.append(Line);//appends the text
-                        text.append("\n");//creates a new line
-
-                    }
-
-                    input.close(); //closes the file
-
-                } catch (Exception evt) {
-                    JOptionPane.showMessageDialog(title, evt.getMessage()); //message appears if there is an error
-                }
-            } //else {
-            //    JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling
-            //}
-            textUponOpen = text.getText();
-
-
-        } else if (in.equals("Save As"))//saves only java files
+            this.open();
+        }
+        else if (in.equals("Save As"))//saves only java files
         {
             saveAsFile();
         }
         else if (in.equals("Save")){
             saveFile();
         }
-}
-    // Main class 
+    }
+    // Main class
     public static void main(String [] args){
-        CodeEditor e = new CodeEditor(); 
-    } 
+        CodeEditor e = new CodeEditor();
+    }
 } 
 
 /*TODO:
