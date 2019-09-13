@@ -1,8 +1,8 @@
 import java.awt.*;
 import javax.swing.*; 
 import java.io.*; 
-import java.awt.event.*; 
-import javax.swing.plaf.metal.*; 
+import java.awt.event.*;
+import javax.swing.plaf.metal.*;
 import javax.swing.text.*; 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -246,6 +246,7 @@ class CodeEditor extends JFrame implements ActionListener {
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());//directs user to home directory
             jfc.setDialogTitle("Select a java file");//dialog for selecting file will say choose file
             jfc.setAcceptAllFileFilterUsed(false);//Boolean to show that it wont accept any file
+            jfc.setFileSelectionMode(jfc.FILES_AND_DIRECTORIES);
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Java (.java)", "java");//accept only .txt files
             jfc.addChoosableFileFilter(filter);
             int returnValue = jfc.showOpenDialog(null);
