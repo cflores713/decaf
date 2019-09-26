@@ -22,13 +22,12 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.Optional; 
 public class Main extends Application implements  EventHandler<ActionEvent>{
-	String textUponOpen = "";
-    String textBeforeExit = "";
-    String path = "";
-
-    public static int windowNum = 1;
+	String textUponOpen;
+    String textBeforeExit;
+    String path;
+    public static int windowNum;
   
-	TextArea text = new TextArea();
+	TextArea text;
 	public void start(Stage s) {
 	
 		
@@ -40,8 +39,11 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		
 	  
 		  
-		   
-	        
+		    text = new TextArea();
+		    windowNum = 1;
+		    textUponOpen = "";
+		    textBeforeExit = "";
+		    path = "";
 		    
 		  //-----------------First menu tab file-------------------//
 		    Menu file = new Menu("File");
@@ -101,12 +103,16 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    mb.getMenus().add(Execute); 
 		    // create a VBox 
 		    VBox vb = new VBox(mb); 
+		  
+		    text.setPrefHeight(1000); 
+		    text.setPrefWidth(1000);  
 		    vb.getChildren().add(text);
-		    Scene sc = new Scene(vb, 500, 500); 
+		    Scene sc = new Scene(vb, 500,500); 
 		    // set the scene 
 		    s.setScene(sc); 
 		    
 		    s.show(); 
+		    
 		    
 		
 		
@@ -118,10 +124,11 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	{
         if (!path.equals(""))
         {
+    	  
             try//checks if the file is able to open and not invalid
             {
                 File file = new File(path);
-
+                path = file.getPath();//gets the path of the file
                 BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
 
                 writeb.write(text.getText()); //gets the text that is inputed
@@ -155,6 +162,8 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	        if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
 	        	
 	            //System.exit(0);
+	        	Stage newStage = new Stage();
+	        	newStage.close();
 	            windowNum--;
 
 	            //check if more than one window is open
@@ -167,22 +176,26 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	            warning.setHeaderText("Memory loss warning");
 	            warning.setContentText("You've changed your document. Would you like to save before exiting?");
 	            Optional<ButtonType> entry = warning.showAndWait();
-	            if (entry.get() == ButtonType.OK) {
+	            if (entry.get() == ButtonType.YES) {
 	                //reroute to save
+	            	
 	                saveFile();
+	              
 	            
 	                
 	                
 
-	            } else if (entry.get() == ButtonType.CANCEL) {
+	            } else if (entry.get() == ButtonType.NO) {
 	            	
 	            	
 	                //System.exit(0);
+	            	
 	                windowNum--;
 	            }
 	            else
 	            {
-	            	
+	            	 Stage newStage = new Stage();
+				     newStage.close();
 	            }
 	        }
 	        if(windowNum == 0){
@@ -222,65 +235,65 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
           } 
          else 
          {
-        	Alert warning = new Alert(AlertType.ERROR);
+        	Alert warning = new Alert(AlertType.INFORMATION);
      		warning.setTitle("Decaf");
-     		warning.setHeaderText("File error");
-     		warning.setContentText("There is no such file to delete");
+     		warning.setHeaderText("File cancelation");
+     		warning.setContentText("No file was selected to delete");
      		warning.showAndWait();
           }
       
 	}
-    void saveAsFile(){
-        //ToDo: Implement save so you can save changes to the same file repeatedly
-        //Save currently only works as a "Save as"
-        //If you type into a file and save it, then exit and come back, it definitely saves
-        //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
+	 void saveAsFile(){
+	        //ToDo: Implement save so you can save changes to the same file repeatedly
+	        //Save currently only works as a "Save as"
+	        //If you type into a file and save it, then exit and come back, it definitely saves
+	        //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
 
 
-        FileChooser jfc = new FileChooser();//directs user to home directory
-        jfc.setTitle("Save as java file");//dialog for selecting file will say choose file
-        jfc.setInitialDirectory(new File("."));
-        jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
-        File returnValue = jfc.showSaveDialog(null);
-        if (returnValue !=null)
-        {//input here a file read so that it can open and read the file
-          
-            try//checks if the file is able to open and not invalid
-            {
+	        FileChooser jfc = new FileChooser();//directs user to home directory
+	        jfc.setTitle("Save as java file");//dialog for selecting file will say choose file
+	        jfc.setInitialDirectory(new File("."));
+	        jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
+	        File returnValue = jfc.showSaveDialog(null);
+	        if (returnValue !=null)
+	        {//input here a file read so that it can open and read the file
+	          
+	            try//checks if the file is able to open and not invalid
+	            {
 
 
-                File file = jfc.getInitialDirectory();//gets the file name
-                path = file.getPath();//gets the path of the file
-                if(!path.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
-                {
-                    file = new File(path + ".java");
-                    BufferedWriter writeb = new BufferedWriter(new FileWriter(returnValue)); //creates the file with a .java extension
+	                File file = jfc.getInitialDirectory();//gets the file name
+	                path = file.getPath();//gets the path of the file
+	                if(!path.toLowerCase().endsWith(".java"))//if the file isn't a java script then create the file
+	                {
+	                    file = new File(path + ".java");
+	                    BufferedWriter writeb = new BufferedWriter(new FileWriter(returnValue)); //creates the file with a .java extension
 
 
-                    writeb.write(text.getText()); //gets the text that is inputed
+	                    writeb.write(text.getText()); //gets the text that is inputed
 
-                    writeb.flush();
-                    writeb.close(); //closes the file
-                }
-                textUponOpen = text.getText();
+	                    writeb.flush();
+	                    writeb.close(); //closes the file
+	                }
+	                textUponOpen = text.getText();
 
 
 
-            }
-            catch(Exception evt)
-            {
-            	Alert warning = new Alert(AlertType.ERROR);
-        		warning.setTitle("Decaf");
-        		warning.setHeaderText("File error");
-        		warning.setContentText("There is nothing in the file to save");
+	            }
+	            catch(Exception evt)
+	            {
+	            	Alert alert = new Alert(AlertType.ERROR);
+	        		alert.setTitle("Decaf");
+	        		alert.setHeaderText("File error");
+	        		alert.setContentText("There is nothing in the file to save");
 
-        		warning.showAndWait();
-            }
-        }
-        //else {
-        //    JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
-        //}
-    }
+	        		alert.showAndWait();
+	            }
+	        }
+	        //else {
+	        //    JOptionPane.showMessageDialog(title, "You canceled to save a file"); //message appears when canceling
+	        //}
+	    }
 	@Override
 	 public void handle(ActionEvent event) 
     { 
@@ -297,15 +310,16 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             	
                 
               
-            	//File select = new File(jfc.getInitialDirectory().getAbsolutePath()); //finds selected file so that it be open
+            	    //File select = new File(jfc.getInitialDirectory().getAbsolutePath()); //finds selected file so that it be open
                 	try
                 	{
-                		File file = jfc.getInitialDirectory();//gets the file name
-                        path = file.getPath();//gets the path of the file
+                		
+                        path = returnValue.getAbsolutePath();//gets the path of the file
                         String Line = "";
                         FileReader read = new FileReader(returnValue);//reads the file that is being open
                         BufferedReader input = new BufferedReader(read);//shows the input of what the user used
                         text.setText("");
+                        
                         while ((Line = input.readLine()) != null) //reads the line
                         {
 
@@ -315,6 +329,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
                            
 
                         }
+                       
 
                         input.close(); //closes the file
                 	}
@@ -352,6 +367,9 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         }
         else if (in.equals("New")) 
         {
+        	Stage s= new Stage();
+        	start(s);
+        	windowNum++;
         }
         else if (in.equals("Copy")) 
         { 
