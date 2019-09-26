@@ -41,6 +41,7 @@ class CodeEditor extends JFrame implements ActionListener {
         JMenuItem open = new JMenuItem("Open"); 
         JMenuItem save = new JMenuItem("Save");
         JMenuItem saveAs = new JMenuItem("Save As");
+        JMenuItem saveProject = new JMenuItem("Save project");
         JMenuItem exit = new JMenuItem("Exit");
        
       
@@ -50,11 +51,14 @@ class CodeEditor extends JFrame implements ActionListener {
         open.addActionListener(this); 
         save.addActionListener(this);
         saveAs.addActionListener(this);
-        exit.addActionListener(this);//command to exit 
+        saveProject.addActionListener(this);
+        exit.addActionListener(this);//command to exit
+
         file.add(newB);//adds small components to the menu bar
         file.add(open); //adds 2nd menu bar to file when clicking to find open
         file.add(save);
         file.add(saveAs);
+        file.add(saveProject);
         file.add(exit);//adds small component exit under file
         //------------------------------2nd menu bar compile//-----------------------------------------//
         JMenu Compile = new JMenu("Compile");
@@ -184,6 +188,10 @@ class CodeEditor extends JFrame implements ActionListener {
         //}
     }
 
+    public void saveProject() {
+
+    }
+
     public void exitOptions() {
         textBeforeExit = text.getText();
         if (textUponOpen.equals(textBeforeExit)) {//no changes have been made, don't need to prompt extra save
@@ -277,6 +285,7 @@ class CodeEditor extends JFrame implements ActionListener {
             } //else {
             //    JOptionPane.showMessageDialog(title, "You canceled to open a file"); //message appears when canceling
             //}
+            JOptionPane.showMessageDialog(title, System.getProperty("user.dir"));
             textUponOpen = text.getText();
 
 
