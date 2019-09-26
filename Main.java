@@ -1,5 +1,6 @@
 
 import javafx.application.Application;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -28,87 +29,90 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
     public static int windowNum = 1;
   
 	TextArea text = new TextArea();
+
 	public void start(Stage s) {
-	
-		
-			 //Creates a text box object
-		    //JTextArea text; 
-		  
+
+//        BorderPane root = new BorderPane();
+
+//        text.getStyleClass().add("my-text-area");
+        // Add the CSS style class
 		    //creates the frame gui object
-		    s.setTitle("Decaf Code Editor");
-		
-	  
-		  
-		   
-	        
+        s.setTitle("Decaf Code Editor");
+
+        //-----------------First menu tab file-------------------//
+        Menu file = new Menu("File");
+        MenuItem newB = new MenuItem("New");
+        MenuItem open = new MenuItem("Open");
+        MenuItem save = new MenuItem("Save");
+        MenuItem saveAs = new MenuItem("Save As");
+        MenuItem Remove = new MenuItem("Remove File");
+        MenuItem exit = new MenuItem("Exit");
+
+        file.getItems().add(newB);
+        file.getItems().add(open);
+        file.getItems().add(save);
+        file.getItems().add(saveAs);
+        file.getItems().add(Remove);
+        file.getItems().add(exit);
 		    
-		  //-----------------First menu tab file-------------------//
-		    Menu file = new Menu("File");
-		    MenuItem newB = new MenuItem("New"); 
-		    MenuItem open = new MenuItem("Open"); 
-		    MenuItem save = new MenuItem("Save");
-		    MenuItem saveAs = new MenuItem("Save As");
-		    MenuItem Remove = new MenuItem("Remove File");
-		    MenuItem exit = new MenuItem("Exit");
+        newB.setOnAction(this); //action listoners
+        open.setOnAction(this);
+        save.setOnAction(this);
+        saveAs.setOnAction(this);
+        Remove.setOnAction(this);
+        exit.setOnAction(this);
+        //-----------------------------------------------------------//
+
+        //-----------------First menu tab file-------------------//
+        Menu Edit = new Menu("Edit");
+        MenuItem Cut = new MenuItem("Cut");
+        MenuItem Copy = new MenuItem("Copy");
+        MenuItem Paste = new MenuItem("Paste");
+
+        Edit.getItems().add(Cut);
+        Edit.getItems().add(Copy);
+        Edit.getItems().add(Paste);
+
+        Cut.setOnAction(this); //action listoners
+        Copy.setOnAction(this);
+        Paste.setOnAction(this);
+        //-----------------------------------------------------------//
+
+        //----------------- Compile tab-------------------//
+        Menu Compile = new Menu("Compile");
+        MenuItem Build = new MenuItem("Build");
+        Compile.getItems().add(Build);
+        Compile.setOnAction(this);
+        //-----------------------------------------------------------//
+
+        //----------------- Execute tab-------------------//
+        Menu Execute = new Menu("Execute");
+        // Execute.getItems().add(Execute);
+        //-----------------------------------------------------------//
 		    
-		    file.getItems().add(newB); 
-		    file.getItems().add(open); 
-		    file.getItems().add(save);
-		    file.getItems().add(saveAs);
-		    file.getItems().add(Remove);
-		    file.getItems().add(exit);
-		    
-		    newB.setOnAction(this); //action listoners
-	        open.setOnAction(this); 
-	        save.setOnAction(this);
-	        saveAs.setOnAction(this); 
-	        Remove.setOnAction(this);
-	        exit.setOnAction(this); 
-		    //-----------------------------------------------------------//
-			  //-----------------First menu tab file-------------------//
-		    Menu Edit = new Menu("Edit");
-		    MenuItem Cut = new MenuItem("Cut"); 
-		    MenuItem Copy = new MenuItem("Copy"); 
-		    MenuItem Paste = new MenuItem("Paste");
-		   
-		    Edit.getItems().add(Cut);
-		    Edit.getItems().add(Copy);
-		    Edit.getItems().add(Paste);
-		    
-		    Cut.setOnAction(this); //action listoners
-	        Copy.setOnAction(this); 
-	        Paste.setOnAction(this);
-		
-		    //-----------------------------------------------------------//
-		    //----------------- Compile tab-------------------//
-		    Menu Compile = new Menu("Compile");
-		    MenuItem Build = new MenuItem("Build");
-		    Compile.getItems().add(Build);
-		    Compile.setOnAction(this);
-		    //-----------------------------------------------------------//
-		  //----------------- Execute tab-------------------//
-		    Menu Execute = new Menu("Execute");
-		   // Execute.getItems().add(Execute);
-		    //-----------------------------------------------------------//
-		    
-		    MenuBar mb = new MenuBar(); 
-	
-		    // add menu to menubar 
-		    mb.getMenus().add(file); 
-		    mb.getMenus().add(Edit);
-		    mb.getMenus().add(Compile); 
-		    mb.getMenus().add(Execute); 
-		    // create a VBox 
-		    VBox vb = new VBox(mb); 
-		    vb.getChildren().add(text);
-		    Scene sc = new Scene(vb, 500, 500); 
-		    // set the scene 
-		    s.setScene(sc); 
-		    
-		    s.show(); 
-		    
-		
-		
+        MenuBar mb = new MenuBar();
+        // add menu to menubar
+        mb.getMenus().add(file);
+        mb.getMenus().add(Edit);
+        mb.getMenus().add(Compile);
+        mb.getMenus().add(Execute);
+        // create a VBox
+        VBox vb = new VBox(mb);
+        vb.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+//        Below is an example for adding orangered text color style to all text within the textArea
+//        We need to add an event listener that listens for the space key to check if user is entering "true" or "false"
+//        But cannot have different colored text in the same area...may need to use an HTMLEditor instead of a textarea
+//        text.getStyleClass().add("orangered");
+        text.setStyle("-fx-text-fill: orangered;");
+        vb.getChildren().add(text);
+
+
+        Scene sc = new Scene(vb, 500, 500);
+
+
+        // set the scene
+        s.setScene(sc);
+        s.show();
 	}
 	
 	        
