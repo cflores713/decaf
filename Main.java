@@ -1,5 +1,3 @@
-package application;
-	
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -18,8 +16,13 @@ import java.io.BufferedReader;
 import java.io.*;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.FileReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Optional; 
 public class Main extends Application implements  EventHandler<ActionEvent>{
@@ -64,7 +67,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    file.getItems().add(Remove);
 		    file.getItems().add(exit);
 		    
-		    newB.setOnAction(this); //action listoners
+		    newB.setOnAction(this); //action listeners
 		    NewP.setOnAction(this);
 	        open.setOnAction(this); 
 	        save.setOnAction(this);
@@ -82,7 +85,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    Edit.getItems().add(Copy);
 		    Edit.getItems().add(Paste);
 		    
-		    Cut.setOnAction(this); //action listoners
+		    Cut.setOnAction(this); //action listeners
 	        Copy.setOnAction(this); 
 	        Paste.setOnAction(this);
 		
@@ -95,7 +98,10 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    //-----------------------------------------------------------//
 		  //----------------- Execute tab-------------------//
 		    Menu Execute = new Menu("Execute");
-		   // Execute.getItems().add(Execute);
+		    MenuItem Test = new MenuItem("Test");
+		    Execute.getItems().add(Test);
+		    Execute.setOnAction(this);
+
 		    //-----------------------------------------------------------//
 		    
 		    MenuBar mb = new MenuBar(); 
@@ -123,7 +129,17 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	}
 	
 	        
-	    
+
+	void throwMyException(Exception evt)
+    {
+        Alert warning = new Alert(AlertType.ERROR);
+        warning.setTitle("Decaf");
+        warning.setHeaderText("File error");
+        warning.setContentText("There is nothing in the file to save");
+
+        warning.showAndWait();
+    }
+
 	void saveFile()
 	{
         if (!path.equals(""))
@@ -143,12 +159,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             }
             catch(Exception evt)
             {
-            	Alert warning = new Alert(AlertType.ERROR);
-        		warning.setTitle("Decaf");
-        		warning.setHeaderText("File error");
-        		warning.setContentText("There is nothing in the file to save");
-
-        		warning.showAndWait();
+                throwMyException(evt);
             }
         }
 
@@ -184,10 +195,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	                //reroute to save
 	            	
 	                saveFile();
-	              
-	            
-	                
-	                
+
 
 	            } else if (entry.get() == ButtonType.NO) {
 	            	
@@ -233,8 +241,6 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
                       warning2.setHeaderText("The file you selected "+returnValue.getName()+" has been deleted ");
                       warning2.setContentText("Please hit the Ok button to close the dialog");
                       warning2.showAndWait();
-              
-              		
               }
           } 
          else 
@@ -286,12 +292,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	            }
 	            catch(Exception evt)
 	            {
-	            	Alert alert = new Alert(AlertType.ERROR);
-	        		alert.setTitle("Decaf");
-	        		alert.setHeaderText("File error");
-	        		alert.setContentText("There is nothing in the file to save");
-
-	        		alert.showAndWait();
+                    throwMyException(evt);
 	            }
 	        }
 	        //else {
@@ -311,9 +312,6 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             File returnValue = jfc.showOpenDialog(null);
             if (returnValue != null) 
             {
-            	
-                
-              
             	    //File select = new File(jfc.getInitialDirectory().getAbsolutePath()); //finds selected file so that it be open
                 	try
                 	{
@@ -353,7 +351,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         if(in.equals("New Project"))//needs to be worked on
         {
         	 
-        	
+        	//What do we want to go here as opposed to just opening new?
                 
 	    }
         else if(in.equals("Remove File"))//Removes a file
@@ -365,6 +363,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             saveAsFile();
         }
         else if (in.equals("Save")){
+
             saveFile();
         }
         else if (in.equals("Exit")) 
@@ -389,6 +388,39 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         { 
             text.paste(); //paste the text
         }
+        else if(in.equals("Compile"))
+        {
+            JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
+            comp.run(null, null, null, "/Users/caitiehall/Documents/executionTester.java");
+            System.out.println("Compilation complete");
+        }
+        else if(in.equals("Execute"))
+        {
+            Runtime exe = Runtime.getRuntime();
+            String []command = {"/Users/Documents/HelloWorld", "-get t"};
+            try
+            {
+//                Process p = exe.exec(command);
+//                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//                BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//                String s = "";
+//                while((s = stdInput.readLine()) != null)
+//                {
+//                    System.out.println(s);
+//                }
+//
+//                while((s = stdError.readLine()) != null)
+//                {
+//                    System.out.println(s);
+//                }
+            }
+            catch(Exception e)
+            {
+
+            }
+
+        }
+
         
     
     }
