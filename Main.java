@@ -399,45 +399,40 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         }
         else if(in.equals("Compile"))
         {
-        	// TODO: Delete testoutput directory after quitting program
-        	// Creates a directory called testoutput that contains the .class files for a compiled .java file
-			String[] options = new String[] { "-d", "testoutput" };
-			File[] javaFiles = new File[] { new File(path) };
-			JavaCompiler.CompilationTask compilationTask = comp.getTask(null, null, null,
-					Arrays.asList(options),
-					null,
-					fileManager.getJavaFileObjects(javaFiles)
-			);
-			compilationTask.call();
-
+        	// TODO: get this working so we can compile multiple files, need to figure out cleanup of testoutput directory
+//        	// Creates a directory called testoutput that contains the .class files for a compiled .java file
+//			String[] options = new String[] { "-d", "testoutput" };
+//			File[] javaFiles = new File[] { new File(path) };
+//			JavaCompiler.CompilationTask compilationTask = comp.getTask(null, null, null,
+//					Arrays.asList(options),
+//					null,
+//					fileManager.getJavaFileObjects(javaFiles)
+//			);
+//			compilationTask.call();
+			comp.run(System.in, System.out, System.err, path);
             System.out.println("Compilation complete");
         }
         else if(in.equals("Execute"))
         {
-        	// TODO: Compile if not already compiled
+        	// TODO: Compile if not already compile
             try
             {
             	// TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
-				File f = new File("./testoutput/");
-				URL[] cp = {f.toURI().toURL()};
-				URLClassLoader urlcl = new URLClassLoader(cp);
-				File myfile = new File(path);
-				Class compiledClass = urlcl.loadClass("testfiles.MyTestFile");
-				Method main = compiledClass.getDeclaredMethod("main", String[].class);
-				String[] params = null; // init params accordingly
-				main.invoke(null, (Object) params); // static method doesn't have an instance
+				if (path.length() > 0) {
+					ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
+					MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
+					Class compiledClass = classLoader.loadClassByPath(path.replace(".java", ".class"));
+					Method main = compiledClass.getDeclaredMethod("main", String[].class);
+					String[] params = null; // init params accordingly
+					main.invoke(null, (Object) params); // static method doesn't have an instance
+				}
             }
             catch(Exception e)
             {
             	System.out.println("Run failed.");
             	e.printStackTrace();
-
             }
-
         }
-
-        
-    
     }
 
 	public static void main(String[] args) {
