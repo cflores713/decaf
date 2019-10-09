@@ -1,4 +1,4 @@
-package sample;
+package prototypes;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -34,7 +34,7 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Main extends Application {
+public class decaf2 extends Application {
     private final String INITIAL_TEXT = "Lorem ipsum dolor sit "
             + "amet, consectetur adipiscing elit. Nam tortor felis, pulvinar "
             + "in scelerisque cursus, pulvinar at ante. Nulla consequat"
