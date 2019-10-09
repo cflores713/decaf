@@ -17,14 +17,19 @@ import java.io.*;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
+import javax.tools.*;
 import java.io.FileReader;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Optional; 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 public class Main extends Application implements  EventHandler<ActionEvent>{
 	String textUponOpen;
     String textBeforeExit;
@@ -303,7 +308,11 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	 public void handle(ActionEvent event) 
     { 
         String in = ((MenuItem)event.getSource()).getText();
-        if(in.equals("Open"))
+        // Below are variables needed for build and run
+		JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
+		StandardJavaFileManager fileManager = comp.getStandardFileManager(null, null, null);
+
+		if(in.equals("Open"))
         {
             FileChooser jfc = new FileChooser();//directs user to home directory
             jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
@@ -390,32 +399,38 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         }
         else if(in.equals("Compile"))
         {
-            JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
-            comp.run(null, null, null, "/Users/caitiehall/Documents/executionTester.java");
+        	// TODO: Delete testoutput directory after quitting program
+        	// Creates a directory called testoutput that contains the .class files for a compiled .java file
+			String[] options = new String[] { "-d", "testoutput" };
+			File[] javaFiles = new File[] { new File(path) };
+			JavaCompiler.CompilationTask compilationTask = comp.getTask(null, null, null,
+					Arrays.asList(options),
+					null,
+					fileManager.getJavaFileObjects(javaFiles)
+			);
+			compilationTask.call();
+
             System.out.println("Compilation complete");
         }
         else if(in.equals("Execute"))
         {
-            Runtime exe = Runtime.getRuntime();
-            String []command = {"/Users/Documents/HelloWorld", "-get t"};
+        	// TODO: Compile if not already compiled
             try
             {
-//                Process p = exe.exec(command);
-//                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//                String s = "";
-//                while((s = stdInput.readLine()) != null)
-//                {
-//                    System.out.println(s);
-//                }
-//
-//                while((s = stdError.readLine()) != null)
-//                {
-//                    System.out.println(s);
-//                }
+            	// TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
+				File f = new File("./testoutput/");
+				URL[] cp = {f.toURI().toURL()};
+				URLClassLoader urlcl = new URLClassLoader(cp);
+				File myfile = new File(path);
+				Class compiledClass = urlcl.loadClass("testfiles.MyTestFile");
+				Method main = compiledClass.getDeclaredMethod("main", String[].class);
+				String[] params = null; // init params accordingly
+				main.invoke(null, (Object) params); // static method doesn't have an instance
             }
             catch(Exception e)
             {
+            	System.out.println("Run failed.");
+            	e.printStackTrace();
 
             }
 
