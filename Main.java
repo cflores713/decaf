@@ -1,10 +1,13 @@
 import javafx.application.Application;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button; 
-import javafx.scene.layout.*; 
+import javafx.scene.layout.*;
 import javafx.event.ActionEvent; 
 import javafx.stage.FileChooser;
 import javafx.stage.DirectoryChooser;
@@ -108,7 +111,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    Execute.setOnAction(this);
 
 		    //-----------------------------------------------------------//
-
+			//-----------Statistics Tab-----------------//
 			Menu Stats = new Menu("Statistics");
 			MenuItem showStats = new MenuItem("Show Code Statistics");
 			Stats.getItems().add(showStats);
@@ -430,20 +433,36 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		{
 			//ToDo: Figure out where to have this result show up inside the application, not just in console
 			int charNum = 0;
-			int lineNum = 0;//requires we delimit by... \n?
+			int lineNum = 0;
+			int keyNum = 0;
 			String currentCode = text.getText();
-			for(int i = 0; i < currentCode.length(); i++)
+			String lineSplit[] = currentCode.split("\\n");//delimit by new line character
+			for(int i = 0; i < lineSplit.length; i++)
 			{
-				char letter = currentCode.charAt(i);
-				if(letter == '\n') {
-					//if we hit a new line, increment lineNum
+				if(!lineSplit[i].isEmpty()){//keeps us from counting blank lines towards lineNum
 					lineNum++;
 				}
-				charNum++;
-
+				for(int j = 0; j < lineSplit[i].length(); j++)
+				{
+					charNum++;//read through each line and count characters
+				}
+			}
+			String firstSplit[] = currentCode.split("[;]");
+			for(int i = 0; i < firstSplit.length; i++)
+			{
+				//code string splits each LINE from firstSplit
+				String codeStr[] = firstSplit[i].trim().split("[\\s\\n({]");
+				for(int j = 0; j < codeStr.length; j++)
+				{
+					if(codeStr[j].equals("if") || codeStr[j].equals("else") || codeStr[j].equals("for") || codeStr[j].equals("while"))
+					{
+						keyNum++;
+					}
+				}
 			}
 			System.out.println("Number of characters: " + charNum);
 			System.out.println("Number of lines: " + lineNum);
+			System.out.println("Keywords in use: " + keyNum);
 		}
     }
 
