@@ -451,7 +451,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 			for(int i = 0; i < firstSplit.length; i++)
 			{
 				//code string splits each LINE from firstSplit
-				String codeStr[] = firstSplit[i].trim().split("[\\s\\n({]");
+				String codeStr[] = firstSplit[i].trim().split("[\\s\\n({})]");
 				for(int j = 0; j < codeStr.length; j++)
 				{
 					if(codeStr[j].equals("if") || codeStr[j].equals("else") || codeStr[j].equals("for") || codeStr[j].equals("while"))
