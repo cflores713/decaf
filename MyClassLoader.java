@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MyClassLoader extends ClassLoader{
 
@@ -12,7 +13,8 @@ public class MyClassLoader extends ClassLoader{
     public Class loadClassByPath(String path) throws ClassNotFoundException {
 
         try {
-            byte[] classData = Files.readAllBytes(Path.of(path));
+            Path myPath = Paths.get(path);
+            byte[] classData = Files.readAllBytes(myPath);
             return defineClass(null, classData, 0, classData.length);
         } catch (MalformedURLException e) {
             e.printStackTrace();
