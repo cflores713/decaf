@@ -266,10 +266,6 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
       
 	}
 	 void saveAsFile(){
-	        //ToDo: Implement save so you can save changes to the same file repeatedly
-	        //Save currently only works as a "Save as"
-	        //If you type into a file and save it, then exit and come back, it definitely saves
-	        //But if you want to make changes to that already-saved file, you can't. You'll have to save it as a diff version.
 	        FileChooser jfc = new FileChooser();//directs user to home directory
 	        jfc.setTitle("Save as java file");//dialog for selecting file will say choose file
 	        jfc.setInitialDirectory(new File("."));
@@ -460,9 +456,13 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 					}
 				}
 			}
-			System.out.println("Number of characters: " + charNum);
-			System.out.println("Number of lines: " + lineNum);
-			System.out.println("Keywords in use: " + keyNum);
+			Alert stats = new Alert(AlertType.INFORMATION);
+			stats.setHeaderText("Code Statistics");
+			stats.setContentText("Number of characters: " + charNum + "\n"
+					+ "Number of lines: " + lineNum + "\n"
+					+ "Keywords in use (if, else, while, for): " + keyNum + "\n"
+			);
+			stats.showAndWait();
 		}
     }
 
