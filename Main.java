@@ -310,7 +310,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         String in = ((MenuItem)event.getSource()).getText();
         // Below are variables needed for build and run
 		JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
-		StandardJavaFileManager fileManager = comp.getStandardFileManager(null, null, null);
+		//StandardJavaFileManager fileManager = comp.getStandardFileManager(null, null, null);
 
 		if(in.equals("Open"))
         {
@@ -426,6 +426,25 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             	e.printStackTrace();
             }
         }
+        else if(in.equals("Statistics"))
+		{
+			//ToDo: Figure out where to have this result show up inside the application, not just in console
+			int charNum = 0;
+			int lineNum = 0;//requires we delimit by... \n?
+			String currentCode = text.getText();
+			for(int i = 0; i < currentCode.length(); i++)
+			{
+				char letter = currentCode.charAt(i);
+				if(letter == '\n') {
+					//if we hit a new line, increment lineNum
+					lineNum++;
+				}
+				charNum++;
+
+			}
+			System.out.println("Number of characters: " + charNum);
+			System.out.println("Number of lines: " + lineNum);
+		}
     }
 
 	public static void main(String[] args) {
