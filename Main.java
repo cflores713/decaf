@@ -103,19 +103,25 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    //-----------------------------------------------------------//
 		  //----------------- Execute tab-------------------//
 		    Menu Execute = new Menu("Execute");
-		    MenuItem Test = new MenuItem("Test");
-		    Execute.getItems().add(Test);
+		    MenuItem Run = new MenuItem("Run");
+		    Execute.getItems().add(Run);
 		    Execute.setOnAction(this);
 
 		    //-----------------------------------------------------------//
-		    
+
+			Menu Stats = new Menu("Statistics");
+			MenuItem showStats = new MenuItem("Show Code Statistics");
+			Stats.getItems().add(showStats);
+			Stats.setOnAction(this);
+
 		    MenuBar mb = new MenuBar(); 
 	
 		    // add menu to menubar 
 		    mb.getMenus().add(file); 
 		    mb.getMenus().add(Edit);
 		    mb.getMenus().add(Compile); 
-		    mb.getMenus().add(Execute); 
+		    mb.getMenus().add(Execute);
+		    mb.getMenus().add(Stats);
 		    // create a VBox 
 		    VBox vb = new VBox(mb); 
 		  
