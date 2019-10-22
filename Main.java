@@ -2,44 +2,48 @@ import javafx.application.Application;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.*;
 import javafx.event.ActionEvent; 
 import javafx.stage.FileChooser;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.event.EventHandler; 
 import javafx.scene.control.*; 
 import javafx.scene.control.Alert.AlertType;
 import java.io.BufferedReader;
 import java.io.*;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.reactfx.Subscription;
 import javax.tools.*;
 import java.io.FileReader;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Main extends Application implements  EventHandler<ActionEvent>{
 	String textUponOpen;
     String textBeforeExit;
     String path;
     public static int windowNum;
+
+    private static final String[] keywordList = new String[] {
+            "if", "else", "for", "while"
+    };
+    private static final String[] our_Operators = new String[] {
+        "+", "-", "/", "*", "%"
+    };
   
-	TextArea text;
+	CodeArea text;
 	public void start(Stage s) {
 	
 		
@@ -51,7 +55,18 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		
 	  
 		  
-		    text = new TextArea();
+		    text = new CodeArea();
+		    text.setParagraphGraphicFactory(LineNumberFactory.get(text));//sets up line numbers
+		    Subscription cleanupWhenNoLongerNeedIt = text
+                    .multiPlainChanges()
+                    .successionEnds(Duration.ofMillis(500))
+                    .subscribe(ignore -> text.setStyleSpans(0, computeHighlighting(text.getText())));
+
+
+            text.replaceText(0, 0, text.getText());
+
+
+
 		    windowNum = 1;
 		    textUponOpen = "";
 		    textBeforeExit = "";
@@ -132,17 +147,43 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    text.setPrefWidth(1000);  
 		    vb.getChildren().add(text);
 		    Scene sc = new Scene(vb, 500,500); 
-		    // set the scene 
-		    s.setScene(sc); 
-		    
-		    s.show(); 
+		    // set the scene
+            //Scene scene = new Scene(new StackPane(new VirtualizedScrollPane<>(text)), 600, 400);
+            ColoredText maybe = new ColoredText();
+            maybe.testing(sc, s);
+
+		    s.show();
 		    
 		    
 		
 		
 	}
-	
-	        
+
+    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", keywordList) + ")\\b";
+    private static final String OPERATOR_PATTERN = "\\+";
+
+    private static final Pattern PATTERN = Pattern.compile(
+            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+                    + "|(?<OP>" + OPERATOR_PATTERN + ")"
+    );
+
+    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+        Matcher matcher = PATTERN.matcher(text);
+        int lastKwEnd = 0;
+        StyleSpansBuilder<Collection<String>> spansBuilder
+                = new StyleSpansBuilder<>();
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                                    matcher.group("OP") != null ? "op":
+                                            null; /* never happens */ assert styleClass != null;
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            lastKwEnd = matcher.end();
+        }
+        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        return spansBuilder.create();
+    }
 
 	void throwMyException(Exception evt)
     {
@@ -165,7 +206,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 				System.out.println(file.getName());
                 BufferedWriter writeb = new BufferedWriter(new FileWriter(file)); //creates the file with a .java extension
 
-                writeb.write(text.getText()); //gets the text that is inputed
+                writeb.write(text.getText()); //gets the text that is inputted
 
                 writeb.flush();
                 writeb.close(); //closes the file
@@ -212,10 +253,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 
 
 	            } else if (entry.get() == ButtonType.NO) {
-	            	
-	            	
 	                //System.exit(0);
-	            	
 	                windowNum--;
 	            }
 	            else
@@ -327,14 +365,13 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
                         String Line = "";
                         FileReader read = new FileReader(returnValue);//reads the file that is being open
                         BufferedReader input = new BufferedReader(read);//shows the input of what the user used
-                        text.setText("");
+                        text.setStyle("");
                         
                         while ((Line = input.readLine()) != null) //reads the line
                         {
                             text.appendText(Line);//appends the text
                             text.appendText("\n");//creates a new line
                         }
-                       
                         input.close(); //closes the file
                 	}
                 	catch(Exception evt)
