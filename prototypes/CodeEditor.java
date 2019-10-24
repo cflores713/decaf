@@ -1,9 +1,8 @@
-import java.awt.*;
-import javax.swing.*; 
+package prototypes;
+
+import javax.swing.*;
 import java.io.*; 
 import java.awt.event.*;
-import javax.swing.plaf.metal.*;
-import javax.swing.text.*; 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
