@@ -25,5 +25,3 @@ public class MyClassLoader extends ClassLoader{
         return null;
     }
 }
-
-

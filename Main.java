@@ -441,28 +441,23 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 			comp.run(System.in, System.out, System.err, path);
             System.out.println("Compilation complete");
         }
-        else if(in.equals("Execute"))
-        {
-        	// TODO: Compile if not already compile
-            try
-            {
-            	// TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
-				if (path.length() > 0) {
-					ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
-					MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
-					Class compiledClass = classLoader.loadClassByPath(path.replace(".java", ".class"));
-					Method main = compiledClass.getDeclaredMethod("main", String[].class);
-					String[] params = null; // init params accordingly
-					main.invoke(null, (Object) params); // static method doesn't have an instance
+        else // TODO: Compile if not already compile
+			if(in.equals("Execute")) {
+				try {
+					// TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
+					if (path.length() > 0) {
+						ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
+						MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
+						Class compiledClass = classLoader.loadClassByPath(path.replace(".java", ".class"));
+						Method main = compiledClass.getDeclaredMethod("main", String[].class);
+						String[] params = null; // init params accordingly
+						main.invoke(null, (Object) params); // static method doesn't have an instance
+					}
+				} catch (Exception e) {
+					System.out.println("Run failed.");
+					e.printStackTrace();
 				}
-            }
-            catch(Exception e)
-            {
-            	System.out.println("Run failed.");
-            	e.printStackTrace();
-            }
-        }
-        else if(in.equals("Statistics"))
+			} else if(in.equals("Statistics"))
 		{
 			//ToDo: Figure out where to have this result show up inside the application, not just in console
 			int charNum = 0;
