@@ -13,8 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import java.io.BufferedReader;
 import java.io.*;
-import javafx.scene.control.TextArea;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -151,12 +149,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
             //Scene scene = new Scene(new StackPane(new VirtualizedScrollPane<>(text)), 600, 400);
             ColoredText maybe = new ColoredText();
             maybe.testing(sc, s);
-
 		    s.show();
-		    
-		    
-		
-		
 	}
 
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", keywordList) + ")\\b";
@@ -493,6 +486,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 			);
 			stats.showAndWait();
 		}
+
     }
 
 	public static void main(String[] args) {

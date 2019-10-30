@@ -1,7 +1,14 @@
 package testfiles;
 
-public class MyTestFile {
-    public static void main (String[] args) {
-        System.out.println("Hello again.");
+public class MyClass {
+    public void hello() {
+	for (int i = 0; i < 3; i++) {
+	     System.out.println(i);
+	}
+        System.out.println("Hello World");
+    }
+    public static void main(String[] args) {
+	MyClass myClass = new MyClass();
+	myClass.hello();
     }
 }
