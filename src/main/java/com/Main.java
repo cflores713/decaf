@@ -1,3 +1,5 @@
+package com;
+
 import javafx.application.Application;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -21,6 +23,7 @@ import org.reactfx.Subscription;
 import javax.tools.*;
 import java.io.FileReader;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
@@ -145,11 +148,12 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 		    text.setPrefWidth(1000);  
 		    vb.getChildren().add(text);
 		    Scene sc = new Scene(vb, 500,500); 
-		    // set the scene
-            //Scene scene = new Scene(new StackPane(new VirtualizedScrollPane<>(text)), 600, 400);
-            ColoredText maybe = new ColoredText();
-            maybe.testing(sc, s);
+//            ColoredText maybe = new ColoredText();
+//            maybe.testing(sc, s);
+			sc.getStylesheets().add("java-keywords.css");
+			s.setScene(sc);
 		    s.show();
+		    System.out.println(Path.of(".").toString());
 	}
 
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", keywordList) + ")\\b";
@@ -260,7 +264,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	 {
 		 FileChooser jfc = new FileChooser();//directs user to home directory
          jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
-         jfc.setInitialDirectory(new File("."));
+         jfc.setInitialDirectory(new File(""));
          jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
          File returnValue = jfc.showOpenDialog(null);
        
@@ -296,7 +300,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 	 void saveAsFile(){
 	        FileChooser jfc = new FileChooser();//directs user to home directory
 	        jfc.setTitle("Save as java file");//dialog for selecting file will say choose file
-	        jfc.setInitialDirectory(new File("."));
+	        jfc.setInitialDirectory(new File(""));
 	        jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
 	        File returnValue = jfc.showSaveDialog(null);	// returnValue is either what the user selects or types
 
@@ -343,7 +347,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         {
             FileChooser jfc = new FileChooser();//directs user to home directory
             jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
-            jfc.setInitialDirectory(new File("."));
+            jfc.setInitialDirectory(new File(""));
             jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
             File returnValue = jfc.showOpenDialog(null);
             if (returnValue != null) 
@@ -491,5 +495,6 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
 
 	public static void main(String[] args) {
 		launch(args);
+//		Main.main(args);
 	}
 }
