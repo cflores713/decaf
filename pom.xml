@@ -11,9 +11,6 @@
     <properties>
         <java.version>9</java.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <jvm.options>--module-path "/usr/share/openjfx/lib" --add-modules javafx.controls,javafx.fxml</jvm.options>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>11.0.1</javafx.version>
     </properties>
 
     <dependencies>
@@ -39,8 +36,6 @@
             <version>16.0.1</version>
         </dependency>
     </dependencies>
-
-
 
     <build>
         <plugins>
