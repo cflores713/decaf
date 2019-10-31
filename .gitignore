@@ -28,10 +28,10 @@ z# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion,
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/modules.xml
-# .idea/*.iml
+.idea/modules.xml
+.idea/*.iml
 # .idea/modules
-# *.iml
+*.iml
 # *.ipr
 
 # CMake
