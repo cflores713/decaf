@@ -347,7 +347,7 @@ public class Main extends Application implements  EventHandler<ActionEvent>{
         {
             FileChooser jfc = new FileChooser();//directs user to home directory
             jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
-            jfc.setInitialDirectory(new File(""));
+//            jfc.setInitialDirectory(new File(""));
             jfc.getExtensionFilters().addAll(new ExtensionFilter("Java (.java)", "*.java"));
             File returnValue = jfc.showOpenDialog(null);
             if (returnValue != null) 

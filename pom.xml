@@ -53,10 +53,6 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.1</version>
                 <configuration>
-                    <compilerArgs>
-                        <arg>-add-exports</arg>
-                        <arg>javafx.graphics/com.sun.glass.ui=ALL-UNNAMED</arg>
-                    </compilerArgs>
                     <mainClass>com.Main</mainClass>
                 </configuration>
             </plugin>
