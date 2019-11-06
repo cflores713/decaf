@@ -14,7 +14,7 @@ public class Main extends Application {
         primaryStage.setTitle("Decaf Code Editor");
 
         Scene sc = new Scene(root, 1000, 500);
-        //sc.getStylesheets().add(getClass().getResource("java-keywords.css").toExternalForm());
+        sc.getStylesheets().add("java-keywords.css");
         primaryStage.setScene(sc);
         primaryStage.show();
     }
