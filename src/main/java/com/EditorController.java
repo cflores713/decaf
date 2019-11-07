@@ -1,34 +1,4 @@
-//package sample;
-//
-//import javafx.beans.property.StringProperty;
-//import javafx.fxml.FXML;
-//import javafx.scene.control.TextArea;
-//import org.fxmisc.richtext.CodeArea;
-//
-//
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//
-//public class EditorController {
-//
-//    @FXML
-//    //private CodeArea textArea;
-//    private TextArea textArea;
-//    public Path path = Path.of(".");
-//
-//
-//    public StringProperty textProperty() {
-//        return textArea.textProperty();
-//    }
-//
-//    public EditorController getTabModel(){
-//        return this;
-//    }
-//
-//
-//}
-
-package sample;
+package com;
 
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;

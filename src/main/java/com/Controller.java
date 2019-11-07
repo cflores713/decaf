@@ -1,4 +1,4 @@
-package sample;
+package com;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -15,6 +15,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.*;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,55 +25,18 @@ import java.util.Map;
 
 public class Controller {
 
-    private String textUponOpen;
-    private StringProperty textBeforeExit;
-    public static int windowNum;
-    private StringProperty textArea;
-    private EditorController currentTab;
+//    private String textUponOpen;
+//    private StringProperty textBeforeExit;
+//    public static int windowNum;
+//    private StringProperty textArea;
+    public EditorController currentTab;
 
     @FXML
-    private TreeView<Path> treeView;
-    private TreeItem<Path> rootTreeItem;
+    public TreeView<Path> treeView;
+    public TreeItem<Path> rootTreeItem;
 
     @FXML
-    private TabPane fileTabPane;
-
-    @FXML
-    private MenuBar menuBar;
-
-    @FXML
-    private MenuItem newFilebtn;
-
-    @FXML
-    private MenuItem newProjbtn;
-
-    @FXML
-    private MenuItem openbtn;
-
-    @FXML
-    private MenuItem savebtn;
-
-    @FXML
-    private MenuItem saveAsbtn;
-
-    @FXML
-    private MenuItem closebtn;
-
-    @FXML
-    private MenuItem cutbtn;
-
-    @FXML
-    private MenuItem copybtn;
-
-    @FXML
-    private MenuItem pastebtn;
-
-    @FXML
-    private MenuItem buildbtn;
-
-    @FXML
-    private MenuItem runbtn;
-
+    public TabPane fileTabPane;
 
     public void initialize() throws IOException{
         newFile();
@@ -80,13 +44,13 @@ public class Controller {
 
 
     @FXML
-    private void newFile() throws IOException{
+    public void newFile() throws IOException{
         Tab tab = new Tab("Untitled");
         newTab(tab);
     }
 
-    private void newTab(Tab tab) throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("textEditor.fxml"));
+    public void newTab(Tab tab) throws IOException {
+        FXMLLoader loader = new FXMLLoader(new File("./src/main/resources/textEditor.fxml").toURI().toURL());
         tab.setContent(loader.load());
         EditorController controller = loader.getController();
 
@@ -102,7 +66,7 @@ public class Controller {
     }
 
     @FXML
-    void open(ActionEvent event) throws IOException {
+    public void open(ActionEvent event) throws IOException {
         FileChooser jfc = new FileChooser();//directs user to home directory
         jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
         jfc.setInitialDirectory(new File("."));
@@ -150,14 +114,14 @@ public class Controller {
     }
 
     @FXML
-    void build(ActionEvent event) {
+    public void build(ActionEvent event) {
         JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
         comp.run(System.in, System.out, System.err, currentTab.path.toString());
         System.out.println("Compilation complete");
     }
 
     @FXML
-    void run(ActionEvent event) {
+    public void run(ActionEvent event) {
         try {
             // TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
             String path = currentTab.path.toString();
@@ -176,34 +140,34 @@ public class Controller {
     }
 
     @FXML
-    void close(ActionEvent event) {
+    public void close(ActionEvent event) {
         Tab tab = fileTabPane.getSelectionModel().getSelectedItem();
         fileTabPane.getTabs().remove(tab);
     }
 
     @FXML
-    void createProj(ActionEvent event) {
+    public void createProj(ActionEvent event) {
 
     }
 
     @FXML
-    void cut(ActionEvent event) {
+    public void cut(ActionEvent event) {
         currentTab.text.cut();
     }
 
     @FXML
-    void copy(ActionEvent event) {
+    public void copy(ActionEvent event) {
         currentTab.text.copy();
     }
 
     @FXML
-    void paste(ActionEvent event) {
+    public void paste(ActionEvent event) {
         currentTab.text.paste();
     }
 
 
 
-    private void createTree() throws IOException {
+    public void createTree() throws IOException {
 
         // create root
         rootTreeItem = new TreeItem<Path>(currentTab.path.getParent());
@@ -237,7 +201,7 @@ public class Controller {
     }
 
     @FXML
-    void save(ActionEvent event) {
+    public void save(ActionEvent event) {
         if (!currentTab.path.equals(""))
         {
             try//checks if the file is able to open and not invalid
@@ -249,7 +213,7 @@ public class Controller {
 
                 writeb.flush();
                 writeb.close(); //closes the file
-                textUponOpen = currentTab.text.getText();
+//                textUponOpen = currentTab.text.getText();
             }
             catch(Exception evt)
             {
@@ -267,7 +231,7 @@ public class Controller {
     }
 
     @FXML
-    void saveAs() {
+    public void saveAs() {
         FileChooser jfc = new FileChooser();//directs user to home directory
         jfc.setTitle("Save as java file");//dialog for selecting file will say choose file
         jfc.setInitialDirectory(new File("."));
