@@ -14,6 +14,7 @@ import org.fxmisc.richtext.CodeArea;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,13 +26,9 @@ public class Controller {
 
     private String textUponOpen;
     private StringProperty textBeforeExit;
-    //Path path;
     public static int windowNum;
     private StringProperty textArea;
     private EditorController currentTab;
-
-    private StringProperty currentText;
-    private String highlightedText = "";
 
     @FXML
     private TreeView<Path> treeView;
@@ -78,19 +75,23 @@ public class Controller {
 
 
     public void initialize() throws IOException{
-        newTab();
+        newFile();
     }
 
+
     @FXML
-    private void newTab() throws IOException{
+    private void newFile() throws IOException{
         Tab tab = new Tab("Untitled");
+        newTab(tab);
+    }
+
+    private void newTab(Tab tab) throws IOException{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("textEditor.fxml"));
         tab.setContent(loader.load());
         EditorController controller = loader.getController();
 
         tab.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
             if (isNowSelected) {
-                //currentText = controller.textProperty();
                 currentTab = controller.getTabModel();
                 System.out.println(currentTab.path.toString());
             }
@@ -98,6 +99,54 @@ public class Controller {
 
         fileTabPane.getTabs().add(tab);
         fileTabPane.getSelectionModel().select(tab);
+    }
+
+    @FXML
+    void open(ActionEvent event) throws IOException {
+        FileChooser jfc = new FileChooser();//directs user to home directory
+        jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
+        jfc.setInitialDirectory(new File("."));
+        jfc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Java (.java)", "*.java"));
+        File returnValue = jfc.showOpenDialog(null);
+
+        if (returnValue != null) {
+            String tabName = fileTabPane.getSelectionModel().getSelectedItem().getText();
+            System.out.println(tabName);
+            Path path = returnValue.toPath();//gets the path of the file
+            String parentFolder = returnValue.getParent();
+
+            try {
+                //tab is empty, replace with open file and its contents
+                if (tabName.contains("Untitled") && currentTab.text.getLength() == 0){
+                    String line = "";
+                    FileReader read = new FileReader(returnValue);//reads the file that is being open
+                    BufferedReader input = new BufferedReader(read);//shows the input of what the user used
+                    currentTab.text.clear();
+                    while ((line = input.readLine()) != null) //reads the line
+                    {
+                        currentTab.text.appendText(line);//appends the text
+                        currentTab.text.appendText("\n");//creates a new line
+                    }
+                    input.close(); //closes the file
+                    //currentText.set(String.join("\n", Files.readAllLines(path)));
+                    currentTab.path = returnValue.toPath();
+                }
+
+            }
+            catch(Exception evt) {
+                Alert warning = new Alert(Alert.AlertType.ERROR);
+                warning.setTitle("Load Error");
+                warning.setContentText("Unable to load file " + path);
+                warning.showAndWait();
+            }
+            fileTabPane.getSelectionModel().getSelectedItem().setText(path.getFileName().toString());
+
+
+//            createTree();
+//            treeView.setRoot(rootTreeItem);
+
+        }
+        //textUponOpen = currentText;
     }
 
     @FXML
@@ -109,20 +158,21 @@ public class Controller {
 
     @FXML
     void run(ActionEvent event) {
-//        try {
-//            // TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
-//            if (currentTab.path.toString().length() > 0) {
-//                ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
-//                MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
-//                Class compiledClass = classLoader.loadClassByPath(path.replace(".java", ".class"));
-//                Method main = compiledClass.getDeclaredMethod("main", String[].class);
-//                String[] params = null; // init params accordingly
-//                main.invoke(null, (Object) params); // static method doesn't have an instance
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Run failed.");
-//            e.printStackTrace();
-//        }
+        try {
+            // TODO: replace hardcode for testoutput directory with something programmatic, grab the names for loadClass after build
+            String path = currentTab.path.toString();
+            if (path.length() > 0) {
+                ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
+                MyClassLoader classLoader = new MyClassLoader(parentClassLoader);
+                Class compiledClass = classLoader.loadClassByPath(path.replace(".java", ".class"));
+                Method main = compiledClass.getDeclaredMethod("main", String[].class);
+                String[] params = null; // init params accordingly
+                main.invoke(null, (Object) params); // static method doesn't have an instance
+            }
+        } catch (Exception e) {
+            System.out.println("Run failed.");
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -151,46 +201,7 @@ public class Controller {
         currentTab.text.paste();
     }
 
-    @FXML
-    void open(ActionEvent event) throws IOException {
-        FileChooser jfc = new FileChooser();//directs user to home directory
-        jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
-        jfc.setInitialDirectory(new File("."));
-        jfc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Java (.java)", "*.java"));
-        File returnValue = jfc.showOpenDialog(null);
 
-        if (returnValue != null) {
-            Path path = returnValue.toPath();//gets the path of the file
-            String parentFolder = returnValue.getParent();
-            try {
-                String line = "";
-                FileReader read = new FileReader(returnValue);//reads the file that is being open
-                BufferedReader input = new BufferedReader(read);//shows the input of what the user used
-                currentTab.text.clear();
-                while ((line = input.readLine()) != null) //reads the line
-                {
-                    currentTab.text.appendText(line);//appends the text
-                    currentTab.text.appendText("\n");//creates a new line
-                }
-                input.close(); //closes the file
-                //currentText.set(String.join("\n", Files.readAllLines(path)));
-                currentTab.path = returnValue.toPath();
-            }
-            catch(Exception evt) {
-                Alert warning = new Alert(Alert.AlertType.ERROR);
-                warning.setTitle("Load Error");
-                warning.setContentText("Unable to load file " + path);
-                warning.showAndWait();
-            }
-            fileTabPane.getSelectionModel().getSelectedItem().setText(path.getFileName().toString());
-
-
-            createTree();
-            treeView.setRoot(rootTreeItem);
-
-        }
-        //textUponOpen = currentText;
-    }
 
     private void createTree() throws IOException {
 

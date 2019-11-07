@@ -56,8 +56,6 @@ public class EditorController extends Tab {
 
     }
 
-//    public TextArea textArea;
-
     // for color
     private static final String[] keywordList = new String[] {
             "if", "else", "for", "while"
@@ -86,12 +84,13 @@ public class EditorController extends Tab {
     }
 
     public EditorController getTabModel() {
+        int end = text.getLength();
         text.setParagraphGraphicFactory(LineNumberFactory.get(text));//sets up line numbers
         Subscription cleanupWhenNoLongerNeedIt = text
                 .multiPlainChanges()
                 .successionEnds(Duration.ofMillis(500))
                 .subscribe(ignore -> text.setStyleSpans(0, computeHighlighting(text.getText())));
-        text.replaceText(0, 0, text.getText());
+        text.replaceText(0, end, text.getText());
         return this;
     }
 }

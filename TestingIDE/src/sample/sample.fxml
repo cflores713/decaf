@@ -28,7 +28,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="newFilebtn" mnemonicParsing="false" onAction="#newTab" text="New File" />
+              <MenuItem fx:id="newFilebtn" mnemonicParsing="false" onAction="#newFile" text="New File" />
                   <MenuItem fx:id="newProjbtn" mnemonicParsing="false" onAction="#createProj" text="New Project" />
                   <MenuItem fx:id="openbtn" mnemonicParsing="false" onAction="#open" text="Open" />
                   <MenuItem fx:id="savebtn" mnemonicParsing="false" onAction="#save" text="Save" />
@@ -50,7 +50,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Execute">
               <items>
-                <MenuItem fx:id="runbtn" mnemonicParsing="false" text="Run" />
+                <MenuItem fx:id="runbtn" mnemonicParsing="false" onAction="#run" text="Run" />
               </items>
             </Menu>
         </menus>
