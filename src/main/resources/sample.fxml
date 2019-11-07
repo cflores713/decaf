@@ -53,6 +53,11 @@
                 <MenuItem fx:id="runbtn" mnemonicParsing="false" onAction="#run" text="Run" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Statistics">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#computeStats" text="Show" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>
