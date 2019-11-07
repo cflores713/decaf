@@ -78,15 +78,12 @@ public class Controller {
 
         //check if file exists, then either create tab or replace tab
         if (returnValue != null) {
-            String tabName = fileTabPane.getSelectionModel().getSelectedItem().getText();
+
             Path path = returnValue.toPath();//gets the path of the file
             String parentFolder = returnValue.getParent();
 
             try {
-                //if tab is not empty, create new tab and make current tab
-                if (currentTab.text.getLength() > 0){
-                    newTab(new Tab(path.toString())); //
-                }
+                newTab(new Tab(path.toString())); //
 
                 //fill code area
                 String line = "";
@@ -118,8 +115,7 @@ public class Controller {
         }
         //textUponOpen = currentText;
     }
-
-
+    
     //create tree structure
     public void createTree() throws IOException {
 
@@ -152,7 +148,6 @@ public class Controller {
         catch( Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     //Compile system
