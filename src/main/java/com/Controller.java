@@ -58,7 +58,7 @@ public class Controller {
         tab.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
             if (isNowSelected) {
                 currentTab = controller.getTabModel();
-                System.out.println(currentTab.path.toString());
+//                System.out.println(currentTab.path.toString());
             }
         });
 
@@ -79,7 +79,6 @@ public class Controller {
         //check if file exists, then either create tab or replace tab
         if (returnValue != null) {
             String tabName = fileTabPane.getSelectionModel().getSelectedItem().getText();
-            System.out.println(tabName);
             Path path = returnValue.toPath();//gets the path of the file
             String parentFolder = returnValue.getParent();
 
