@@ -20,7 +20,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -158,6 +160,15 @@ public class Controller {
         System.out.println("Compilation complete");
     }
 
+    @FXML
+    public StringBuilder printClassNameList(List<String> classNames){
+        StringBuilder forPopUp = new StringBuilder();
+        for(String name: classNames){
+            forPopUp.append(name);
+            forPopUp.append("\n");
+        }
+        return forPopUp;
+    }
     //Compute stats of file
     /* TODO: add new feature 1 here
      */
@@ -166,12 +177,21 @@ public class Controller {
         int charNum = 0;
         int lineNum = 0;
         int keyNum = 0;
+        List<String> classNames = new ArrayList<>();
         String currentCode = currentTab.text.getText();
         String lineSplit[] = currentCode.split("\\n");//delimit by new line character
         for(int i = 0; i < lineSplit.length; i++)
         {
             if(!lineSplit[i].isEmpty()){//keeps us from counting blank lines towards lineNum
                 lineNum++;
+            }
+            if(lineSplit[i].contains("class")){
+                String classDeclaration[] = lineSplit[i].split(" ");//delimit by space
+                for(int index = 0; index < classDeclaration.length; index++){
+                    if(classDeclaration[index].equals("class")){
+                        classNames.add(classDeclaration[index+1]);
+                    }
+                }
             }
             for(int j = 0; j < lineSplit[i].length(); j++)
             {
@@ -196,7 +216,10 @@ public class Controller {
         stats.setContentText("Number of characters: " + charNum + "\n"
                 + "Number of lines: " + lineNum + "\n"
                 + "Keywords in use (if, else, while, for): " + keyNum + "\n"
+                + "Classes:" + "\n"
+                + printClassNameList(classNames)
         );
+        printClassNameList(classNames);
         stats.showAndWait();
     }
 

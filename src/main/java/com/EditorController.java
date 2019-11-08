@@ -32,9 +32,12 @@ public class EditorController extends Tab {
     };
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", keywordList) + ")\\b";
     private static final String OPERATOR_PATTERN = "[-+%==/*]";
+    private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
 
     private static final Pattern PATTERN = Pattern.compile(
-            "(?<KEYWORD>" + KEYWORD_PATTERN + ")" + "|(?<OP>" + OPERATOR_PATTERN + ")"
+            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+            + "|(?<OP>" + OPERATOR_PATTERN + ")"
+            + "|(?<STRING>" + STRING_PATTERN + ")"
     );
 
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
@@ -44,7 +47,9 @@ public class EditorController extends Tab {
                 = new StyleSpansBuilder<>();
         while(matcher.find()) {
             String styleClass = matcher.group("KEYWORD") != null ? "keyword" :
-                    matcher.group("OP") != null ? "operator": null; /* never happens */ assert styleClass != null;
+                                matcher.group("OP") != null ? "operator":
+                                matcher.group("STRING") != null ? "string" : null;
+            assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
