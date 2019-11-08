@@ -31,7 +31,7 @@ public class EditorController extends Tab {
             "if", "else", "for", "while"
     };
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", keywordList) + ")\\b";
-    private static final String OPERATOR_PATTERN = "[-+%==/*]";
+    private static final String OPERATOR_PATTERN = "[-+/%<>=](?![-+/%<>])";
     private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
 
     private static final Pattern PATTERN = Pattern.compile(

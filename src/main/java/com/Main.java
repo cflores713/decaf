@@ -13,7 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception{
 //		FXMLLoader loader = new FXMLLoader(new File("src/main/resources/sample.fxml").toURI().toURL());
-		System.out.println(getClass().getClassLoader().getResource("sample.fxml"));
+//		System.out.println(getClass().getClassLoader().getResource("sample.fxml"));
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("sample.fxml"));
 		Parent root = loader.load();
 		primaryStage.setTitle("Decaf Code Editor");
