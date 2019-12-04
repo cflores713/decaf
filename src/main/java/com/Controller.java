@@ -71,7 +71,7 @@ public class Controller {
     //Uses file explorer to open a file or project
     //TODO: implement open to also open a project, currently just a file
     @FXML
-    public void open(ActionEvent event) throws IOException {
+    public void open() throws IOException {
         FileChooser jfc = new FileChooser();//directs user to home directory
         jfc.setTitle("Select a java file");//dialog for selecting file will say choose file
         jfc.setInitialDirectory(new File("."));
@@ -85,7 +85,10 @@ public class Controller {
             String parentFolder = returnValue.getParent();
 
             try {
-                newTab(new Tab(path.toString())); //
+                //if current file is empty replace with open file
+                if (currentTab.text.getLength() > 0){
+                    newTab(new Tab(path.toString()));
+                }
 
                 //fill code area
                 String line = "";
@@ -110,19 +113,24 @@ public class Controller {
             String pathName = path.getFileName().toString();
             fileTabPane.getSelectionModel().getSelectedItem().setText(pathName);//set tab title to file name
 
-            //TODO: create tree based on path of file
-//            createTree();
-//            treeView.setRoot(rootTreeItem);
+
 
         }
         //textUponOpen = currentText;
+    }
+
+    @FXML
+    public void openProj() throws IOException{
+        open();
+        createTree();
+        treeView.setRoot(rootTreeItem);
     }
     
     //create tree structure
     public void createTree() throws IOException {
 
         // create root
-        rootTreeItem = new TreeItem<Path>(currentTab.path.getParent());
+        rootTreeItem = new TreeItem<Path>(currentTab.path.getParent().getFileName());
         rootTreeItem.setExpanded(true);
 
         // create tree structure recursively
@@ -136,7 +144,7 @@ public class Controller {
 
             for (Path path : directoryStream) {
 
-                TreeItem<Path> newItem = new TreeItem<Path>(path);
+                TreeItem<Path> newItem = new TreeItem<Path>(path.getFileName());
                 newItem.setExpanded(true);
 
                 treeItem.getChildren().add(newItem);

@@ -14,7 +14,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="535.0" prefWidth="154.0" SplitPane.resizableWithParent="false">
                <children>
-                  <TreeView layoutY="-1.0" prefHeight="535.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TreeView fx:id="treeView" layoutY="-1.0" prefHeight="535.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -30,6 +30,7 @@
             <items>
               <MenuItem fx:id="newFilebtn" mnemonicParsing="false" onAction="#newFile" text="New File" />
                   <MenuItem fx:id="newProjbtn" mnemonicParsing="false" onAction="#createProj" text="New Project" />
+                  <MenuItem fx:id="openProjbtn" mnemonicParsing="false" onAction="#openProj" text="Open Project" />
                   <MenuItem fx:id="openbtn" mnemonicParsing="false" onAction="#open" text="Open" />
                   <MenuItem fx:id="savebtn" mnemonicParsing="false" onAction="#save" text="Save" />
                   <MenuItem fx:id="saveAsbtn" mnemonicParsing="false" onAction="#saveAs" text="Save As" />
