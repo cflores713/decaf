@@ -113,7 +113,8 @@ public class Controller {
             String pathName = path.getFileName().toString();
             fileTabPane.getSelectionModel().getSelectedItem().setText(pathName);//set tab title to file name
 
-
+            createTree();
+            treeView.setRoot(rootTreeItem);
 
         }
         //textUponOpen = currentText;
@@ -122,8 +123,7 @@ public class Controller {
     @FXML
     public void openProj() throws IOException{
         open();
-        createTree();
-        treeView.setRoot(rootTreeItem);
+
     }
     
     //create tree structure
