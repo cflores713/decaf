@@ -161,13 +161,13 @@ public class Controller {
     }
 
     @FXML
-    public StringBuilder printClassNameList(List<String> classNames){
+    public String printClassOrMethodNames(List<String> Names){
         StringBuilder forPopUp = new StringBuilder();
-        for(String name: classNames){
+        for(String name: Names){
             forPopUp.append(name);
             forPopUp.append("\n");
         }
-        return forPopUp;
+        return forPopUp.toString();
     }
     //Compute stats of file
     /* TODO: add new feature 1 here
@@ -178,6 +178,7 @@ public class Controller {
         int lineNum = 0;
         int keyNum = 0;
         List<String> classNames = new ArrayList<>();
+        List<String> methodNames = new ArrayList<>();
         String currentCode = currentTab.text.getText();
         String lineSplit[] = currentCode.split("\\n");//delimit by new line character
         for(int i = 0; i < lineSplit.length; i++)
@@ -192,6 +193,25 @@ public class Controller {
                         classNames.add(classDeclaration[index+1]);
                     }
                 }
+            }
+            else if(lineSplit[i].contains("public") || lineSplit[i].contains("private")) {
+               StringBuilder nameOnly = new StringBuilder();
+               String fxnNames[] = lineSplit[i].split(" ");
+               for(String name : fxnNames){
+                   if(name.contains("(")){
+                       for(int j = 0; j < name.length(); j++){
+                           if(name.charAt(j) != '('){
+                               nameOnly.append(name.charAt(j));
+                           }
+                           else{
+                               methodNames.add(nameOnly.toString());
+                               nameOnly.delete(0, nameOnly.length());
+                               break;
+                           }
+
+                   }
+                   }
+               }
             }
             for(int j = 0; j < lineSplit[i].length(); j++)
             {
@@ -216,10 +236,12 @@ public class Controller {
         stats.setContentText("Number of characters: " + charNum + "\n"
                 + "Number of lines: " + lineNum + "\n"
                 + "Keywords in use (if, else, while, for): " + keyNum + "\n"
-                + "Classes:" + "\n"
-                + printClassNameList(classNames)
+                + "\nClasses:" + "\n"
+                + printClassOrMethodNames(classNames)
+                + "\nMethods:" + "\n"
+                + printClassOrMethodNames(methodNames)
         );
-        printClassNameList(classNames);
+        printClassOrMethodNames(classNames);
         stats.showAndWait();
     }
 
