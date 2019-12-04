@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/decaf.iml" filepath="$PROJECT_DIR$/.idea/decaf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/decaf.iml" filepath="$PROJECT_DIR$/decaf.iml" />
     </modules>
   </component>
 </project>
