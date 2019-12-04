@@ -163,6 +163,7 @@ public class Controller {
     //Compile system
     @FXML
     public void build(ActionEvent event) {
+        save(event);
         JavaCompiler comp = ToolProvider.getSystemJavaCompiler();
         comp.run(System.in, System.out, System.err, currentTab.path.toString());
         System.out.println("Compilation complete");
@@ -261,6 +262,7 @@ public class Controller {
     @FXML
     public void run(ActionEvent event) {
         try {
+            build(event);
             String path = currentTab.path.toString();
             if (path.length() > 0) {
                 ClassLoader parentClassLoader = MyClassLoader.class.getClassLoader();
